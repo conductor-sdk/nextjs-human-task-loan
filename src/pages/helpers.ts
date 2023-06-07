@@ -1,49 +1,55 @@
 import {
-  ConductorClient,
   HumanTaskEntry,
+  HumanExecutor,
 } from "@io-orkes/conductor-javascript";
 
-export const humanTaskList = async (
-  client: ConductorClient,
-  assignee: string,
-  status: "IN_PROGRESS" | "ASSIGNED"| "COMPLETED" = "IN_PROGRESS"
-): Promise<HumanTaskEntry[]> => {
-  const response = await client.humanTask.getTasksByFilter(status, assignee);
-  if (response.results != undefined) {
-    return response.results;
-  }
-  return [];
-};
-
 export const assignTaskAndClaim = async (
-  client: ConductorClient,
+  executor: HumanExecutor,
   taskId: string,
   assignee: string
 ): Promise<HumanTaskEntry> => {
-  await client.humanTask.assignAndClaim(taskId!, assignee);
-  return await client.humanTask.getTask1(taskId!);
+  await executor.claimTaskAsExternalUser(taskId!, assignee);
+  return await executor.getTaskById(taskId!);
 };
 
 export const findTaskAndClaim = async (
-  client: ConductorClient,
+  executor: HumanExecutor,
   assignee: string
 ): Promise<HumanTaskEntry | null> => {
-  const tasks = await humanTaskList(client, assignee, "ASSIGNED");
+  const tasks = await executor.getTasksByFilter("ASSIGNED", assignee);
   if (tasks.length > 0) {
     const taskId = tasks[0]!.taskId;
-    return await assignTaskAndClaim(client, taskId!, assignee); 
+    return await assignTaskAndClaim(executor, taskId!, assignee);
   }
   return null;
 };
 
 export const findFirstTaskInProgress = async (
-  client: ConductorClient,
+  executor: HumanExecutor,
   assignee: string
 ): Promise<HumanTaskEntry | null> => {
-  const tasks = await humanTaskList(client, assignee, "IN_PROGRESS");
+  const tasks = await executor.getTasksByFilter("IN_PROGRESS", assignee);
   if (tasks.length > 0) {
     const task = tasks[0];
     return task;
   }
   return null;
+};
+
+export const getClaimedAndUnClaimedTasksForAssignee = async (
+  humanExecutor: HumanExecutor,
+  assignee: string
+): Promise<{
+  claimedTasks: HumanTaskEntry[];
+  unClaimedTasks: HumanTaskEntry[];
+}> => {
+  const claimedTasks = await humanExecutor.getTasksByFilter(
+    "IN_PROGRESS",
+    assignee
+  );
+  const unClaimedTasks = await humanExecutor.getTasksByFilter(
+    "ASSIGNED",
+    assignee
+  );
+  return { claimedTasks, unClaimedTasks };
 };
