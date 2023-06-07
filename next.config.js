@@ -12,7 +12,7 @@ module.exports = {
     },
     workflows: {
       requestForLoan: `${
-        process.env.WF_NAME || "loan-origination-flow-test-jim"
+        process.env.WF_NAME || "loan-origination-flow-test"
       }`,
       correlationId: "aCorrelationId",
     },
