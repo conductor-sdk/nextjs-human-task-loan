@@ -1,16 +1,16 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Button, Stack, Typography, Box } from "@mui/material";
 import {
   orkesConductorClient,
   Workflow,
   HumanTaskTemplateEntry,
   HumanTaskEntry,
+  HumanExecutor
 } from "@io-orkes/conductor-javascript";
 import { GetServerSidePropsContext } from "next";
 import getConfig from "next/config";
 
 import { useRouter } from "next/navigation";
-import { UISchemaElement } from "@jsonforms/core";
 import { findTaskAndClaim, findFirstTaskInProgress } from "../helpers";
 import { FormDisplay } from "@/components/FormDisplay";
 
@@ -30,13 +30,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     // Assert Workflow is waiting on human task
     const userId = workflowStatus?.input?.userId as string;
     let maybeClaimedTask: HumanTaskEntry | null = null;
+    const executor = new HumanExecutor(client);
     try {
-      maybeClaimedTask = await findTaskAndClaim(client, userId);
+      maybeClaimedTask = await findTaskAndClaim(executor, userId);
     } catch (e) {
       console.log(e);
     }
     const task =
-      maybeClaimedTask || (await findFirstTaskInProgress(client, userId));
+      maybeClaimedTask || (await findFirstTaskInProgress(executor, userId));
 
     if (task?.templateId != undefined) {
       const template = await client.humanTask.getTemplateById(
@@ -90,10 +91,10 @@ export default function Loan(props: Props) {
     if (props?.task?.taskId != undefined) {
       const client = await orkesConductorClient(props.conductor);
       try {
-        await client.humanTask.updateTaskOutput(
+        const executor = new HumanExecutor(client);
+        await executor.completeTask(
           props.task.taskId,
           formState,
-          true
         );
       } catch (e) {
         console.log(e);

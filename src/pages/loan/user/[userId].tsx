@@ -12,20 +12,20 @@ import {
   orkesConductorClient,
   HumanTaskEntry,
   ConductorClient,
+  HumanExecutor,
 } from "@io-orkes/conductor-javascript";
 import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
-import { findTaskAndClaim, humanTaskList } from "../../helpers";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { publicRuntimeConfig } = getConfig();
   const clientPromise = orkesConductorClient(publicRuntimeConfig.conductor);
   const client: ConductorClient = await clientPromise;
   const userId = context.params?.userId as string;
+  const humanExecutor = new HumanExecutor(client);
+  const tasks = await humanExecutor.getTasksByFilter("IN_PROGRESS", userId);
 
-  const tasks = await humanTaskList(client, userId, "IN_PROGRESS");
-
-  const completedTasks = await humanTaskList(client, userId, "COMPLETED");
+  const completedTasks = await humanExecutor.getTasksByFilter("COMPLETED", userId);
 
   // Assert Workflow is waiting on human task
   return {

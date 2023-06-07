@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Stack, TextField, Box } from "@mui/material";
 import {
   orkesConductorClient,
   WorkflowExecutor,
@@ -37,7 +37,6 @@ export default function Test({ conductor, workflows, correlationId }: Props) {
   const [userId, setUserId] = useState<string>("");
   const router = useRouter();
   const handleRequestForLoan = () => {
-
     const runWorkflow = async () => {
       const client = await orkesConductorClient(conductor);
       const executionId = await new WorkflowExecutor(client).startWorkflow({
@@ -47,20 +46,25 @@ export default function Test({ conductor, workflows, correlationId }: Props) {
           userId: userId,
         },
       });
-     router.push(`/loan/${executionId}`); 
+      router.push(`/loan/${executionId}`);
     };
     runWorkflow();
   };
 
   return (
-    <Stack spacing={2} mt={20} pl={20} pr={20}>
-      <TextField
-        label="user-name"
-        variant="outlined"
-        onChange={(event) => setUserId(event.target.value)}
-        value={userId}
-      />
-      <Button onClick={handleRequestForLoan}>Request For Loan</Button>
+    <Stack direction="row" spacing={2} mt={20} pl={20} pr={20}>
+      <Box>
+        <TextField
+          label="user-name"
+          variant="outlined"
+          onChange={(event) => setUserId(event.target.value)}
+          value={userId}
+        />
+      </Box>
+      <Stack spacing={2} direction="row">
+        <Button onClick={handleRequestForLoan}>Request For Loan</Button>
+        <Button href={`/loan/user/${userId}`}>Continue existing loan</Button>
+      </Stack>
     </Stack>
   );
 }

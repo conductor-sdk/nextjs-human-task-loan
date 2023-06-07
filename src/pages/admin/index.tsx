@@ -2,25 +2,26 @@ import { InboxLayout } from "@/components/elements/admin/InboxLayout";
 import {
   orkesConductorClient,
   HumanTaskEntry,
+  HumanExecutor,
 } from "@io-orkes/conductor-javascript";
 import getConfig from "next/config";
 import { useRouter } from "next/navigation";
-import { assignTaskAndClaim, humanTaskList } from "../helpers";
+import {
+  assignTaskAndClaim,
+  getClaimedAndUnClaimedTasksForAssignee,
+} from "../helpers";
 
 export async function getServerSideProps() {
   const { publicRuntimeConfig } = getConfig();
   const clientPromise = orkesConductorClient(publicRuntimeConfig.conductor);
   const client = await clientPromise;
-  const claimedTasks = await humanTaskList(
-    client,
-    "approval-interim-group",
-    "IN_PROGRESS"
-  );
-  const unClaimedTasks = await humanTaskList(
-    client,
-    "approval-interim-group",
-    "ASSIGNED"
-  );
+  const humanExecutor = new HumanExecutor(client);
+
+  const { claimedTasks, unClaimedTasks } =
+    await getClaimedAndUnClaimedTasksForAssignee(
+      humanExecutor,
+      "approval-interim-group"
+    );
   // With the client pull the workflow with correlationId (correlation id is not really needed it just helps to group orders together)
   return {
     props: {
@@ -57,17 +58,23 @@ export default function Test({
     const { taskId, state } = selectedTask;
     let task = selectedTask;
 
-    const client = await orkesConductorClient(conductor);
+    const humanExecutor = new HumanExecutor(
+      await orkesConductorClient(conductor)
+    );
     if (state === "ASSIGNED") {
       try {
-        const claimedTask = await assignTaskAndClaim(client, taskId!, "admin");
+        const claimedTask = await assignTaskAndClaim(
+          humanExecutor,
+          taskId!,
+          "admin"
+        );
 
         task = claimedTask;
       } catch (error: any) {
         console.log("error", error);
       }
     }
-    router.push(`/test/admin/${task.taskId}`);
+    router.push(`/admin/${task.taskId}`);
   };
 
   return (
