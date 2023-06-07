@@ -116,7 +116,7 @@ export default function Test({
         console.log("error", error);
       }
     }
-    router.replace(`/test/admin/${task.taskId}`);
+    router.replace(`/admin/${task.taskId}`);
   };
 
   const handleDone = async () => {
