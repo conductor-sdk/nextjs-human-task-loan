@@ -259,10 +259,12 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@io-orkes/conductor-javascript@^0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@io-orkes/conductor-javascript/-/conductor-javascript-0.0.11.tgz#1eb42caf3497af36052285c3013a000ea842c291"
-  integrity sha512-kCq+rmEIQHCRjBTCc3+C+fXyWWSWNcb6eh6dt5Wtu+sXc7U9UOwBElMrVll7a2INcNsMgpdZE5l3h6gMTC+XRQ==
+"@io-orkes/conductor-javascript@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@io-orkes/conductor-javascript/-/conductor-javascript-1.0.1.tgz#595338c59b95fe6de835445eded02d6928307d82"
+  integrity sha512-idDToVS9oOrnzAB21MVFHTY1VVr+zzmDFlk/RO97rV1SQw4nAz40ikwRxkth8H7cUr/+dPAa2YAzhbgrHtYtGw==
+  dependencies:
+    uuid "^9.0.0"
 
 "@jsonforms/core@^3.0.0":
   version "3.0.0"
@@ -2742,6 +2744,11 @@ util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
+
+uuid@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
+  integrity sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==
 
 which-boxed-primitive@^1.0.2:
   version "1.0.2"
