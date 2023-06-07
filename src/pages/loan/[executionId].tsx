@@ -127,6 +127,7 @@ export default function Loan(props: Props) {
           <Typography sx={{ color: "red" }}>
             Thanks will let you know shortly
           </Typography>
+          <Button onClick={() => router.push("/")}>Go Home</Button>
         </Box>
       )}
     </Stack>

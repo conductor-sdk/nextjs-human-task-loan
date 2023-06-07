@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Button, Stack, TextField, Box } from "@mui/material";
+import {
+  Button,
+  Stack,
+  TextField,
+  Box,
+  Typography,
+} from "@mui/material";
 import {
   orkesConductorClient,
   WorkflowExecutor,
@@ -50,21 +56,31 @@ export default function Test({ conductor, workflows, correlationId }: Props) {
     };
     runWorkflow();
   };
+  const hasUserId = userId.trim().length == 0;
 
   return (
-    <Stack direction="row" spacing={2} mt={20} pl={20} pr={20}>
-      <Box>
-        <TextField
-          label="user-name"
-          variant="outlined"
-          onChange={(event) => setUserId(event.target.value)}
-          value={userId}
-        />
-      </Box>
-      <Stack spacing={2} direction="row">
-        <Button onClick={handleRequestForLoan}>Request For Loan</Button>
-        <Button href={`/loan/user/${userId}`}>Continue existing loan</Button>
+    <Box mt={20} pl={20} pr={20}>
+      <Typography paragraph>
+        Enter a user name to start a loan or see existing loans
+      </Typography>
+      <Stack direction="row" spacing={2}>
+        <Box>
+          <TextField
+            label="user-name"
+            variant="outlined"
+            onChange={(event) => setUserId(event.target.value)}
+            value={userId}
+          />
+        </Box>
+        <Stack spacing={2} direction="row">
+          <Button onClick={handleRequestForLoan} disabled={hasUserId}>
+            Request For Loan
+          </Button>
+          <Button href={`/loan/user/${userId}`} disabled={hasUserId}>
+            Continue existing loan
+          </Button>
+        </Stack>
       </Stack>
-    </Stack>
+    </Box>
   );
 }
