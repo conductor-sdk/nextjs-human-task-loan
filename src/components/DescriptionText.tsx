@@ -1,4 +1,5 @@
 import React from "react";
+import _isUndefined from "lodash/isUndefined";
 import { Typography, FormControl } from "@mui/material";
 
 export interface DescriptionTextProps {
@@ -44,7 +45,7 @@ const DescriptionText: React.FC<DescriptionTextProps> = ({
         noWrap={noWrap}
         paragraph={paragraph}
       >
-        {value != null ? label : value}
+        {_isUndefined(value) ? label : value}
       </Typography>
     </FormControl>
   );
