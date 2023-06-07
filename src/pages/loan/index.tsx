@@ -5,7 +5,6 @@ import {
   WorkflowExecutor,
 } from "@io-orkes/conductor-javascript";
 import getConfig from "next/config";
-import jsCookie from "js-cookie";
 import { useRouter } from "next/navigation";
 
 export async function getServerSideProps() {
@@ -38,7 +37,6 @@ export default function Test({ conductor, workflows, correlationId }: Props) {
   const [userId, setUserId] = useState<string>("");
   const router = useRouter();
   const handleRequestForLoan = () => {
-    jsCookie.set("userId", userId);// not needed
 
     const runWorkflow = async () => {
       const client = await orkesConductorClient(conductor);
@@ -49,7 +47,7 @@ export default function Test({ conductor, workflows, correlationId }: Props) {
           userId: userId,
         },
       });
-     router.push(`/test/loan/${executionId}`); 
+     router.push(`/loan/${executionId}`); 
     };
     runWorkflow();
   };

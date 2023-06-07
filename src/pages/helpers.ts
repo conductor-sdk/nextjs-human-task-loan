@@ -6,7 +6,7 @@ import {
 export const humanTaskList = async (
   client: ConductorClient,
   assignee: string,
-  status: "IN_PROGRESS" | "ASSIGNED" = "IN_PROGRESS"
+  status: "IN_PROGRESS" | "ASSIGNED"| "COMPLETED" = "IN_PROGRESS"
 ): Promise<HumanTaskEntry[]> => {
   const response = await client.humanTask.getTasksByFilter(status, assignee);
   if (response.results != undefined) {

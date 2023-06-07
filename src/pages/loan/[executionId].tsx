@@ -8,12 +8,7 @@ import {
 } from "@io-orkes/conductor-javascript";
 import { GetServerSidePropsContext } from "next";
 import getConfig from "next/config";
-import { JsonForms } from "@jsonforms/react";
 
-import {
-  materialCells,
-  materialRenderers,
-} from "@jsonforms/material-renderers";
 import { useRouter } from "next/navigation";
 import { UISchemaElement } from "@jsonforms/core";
 import { findTaskAndClaim, findFirstTaskInProgress } from "../helpers";
@@ -105,7 +100,7 @@ export default function Loan(props: Props) {
         setShowErrors(true);
       }
 
-      router.push(`/test/loan/${props.executionId}`);
+      router.push(`/loan/${props.executionId}`);
     }
   };
 

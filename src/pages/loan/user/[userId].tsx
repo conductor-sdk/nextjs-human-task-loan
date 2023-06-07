@@ -81,7 +81,7 @@ export default function MyOrders({ tasks, completedTasks }: Props) {
                       {row.state === "COMPLETED" ? (
                         row.workflowId
                       ) : (
-                        <Link href={`/test/loan/${row.workflowId}`}>
+                        <Link href={`/loan/${row.workflowId}`}>
                           {row.workflowId}
                         </Link>
                       )}
