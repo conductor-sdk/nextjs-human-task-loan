@@ -11,7 +11,7 @@ import { GetServerSidePropsContext } from "next";
 import getConfig from "next/config";
 
 import { useRouter } from "next/navigation";
-import { findTaskAndClaim, findFirstTaskInProgress } from "../helpers";
+import { findTaskAndClaim, findFirstTaskInProgress } from "../../utils/helpers";
 import { FormDisplay } from "@/components/FormDisplay";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

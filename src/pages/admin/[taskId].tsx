@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import {
   assignTaskAndClaim,
   getClaimedAndUnClaimedTasksForAssignee,
-} from "../helpers";
+} from "../../utils/helpers";
 import { FormDisplay } from "@/components/FormDisplay";
 import { GetServerSidePropsContext } from "next";
 

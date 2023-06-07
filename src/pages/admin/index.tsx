@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import {
   assignTaskAndClaim,
   getClaimedAndUnClaimedTasksForAssignee,
-} from "../helpers";
+} from "../../utils/helpers";
 
 export async function getServerSideProps() {
   const { publicRuntimeConfig } = getConfig();
