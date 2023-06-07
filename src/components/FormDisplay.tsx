@@ -7,7 +7,13 @@ import {
   materialRenderers,
 } from "@jsonforms/material-renderers";
 import { JsonSchema, UISchemaElement } from "@jsonforms/core";
+import DescriptionTextTester from "./DescriptionTextTester";
+import DescriptionTextControl from "./DescriptionTextControl";
 
+const renderers = [
+  ...materialRenderers,
+  { tester: DescriptionTextTester, renderer: DescriptionTextControl },
+]
 type Props = {
   template: HumanTaskTemplateEntry;
   formState: Record<string, Record<string, any>>;
@@ -29,7 +35,7 @@ export const FormDisplay = (props: Props) => {
       schema={maybeSchema as JsonSchema}
       uischema={props.template!.templateUI! as unknown as UISchemaElement}
       data={props.formState}
-      renderers={materialRenderers}
+      renderers={renderers}
       cells={materialCells}
       onChange={({ data }) => props.onFormChange(data)}
       validationMode={
