@@ -1,15 +1,16 @@
+import Head from "next/head";
 import { useState } from "react";
-import { Button, Stack, Typography, Box } from "@mui/material";
+import { Button, Stack, Typography, Box, Paper } from "@mui/material";
 import {
   orkesConductorClient,
   Workflow,
   HumanTaskTemplateEntry,
   HumanTaskEntry,
-  HumanExecutor
+  HumanExecutor,
 } from "@io-orkes/conductor-javascript";
 import { GetServerSidePropsContext } from "next";
 import getConfig from "next/config";
-
+import styles from "@/styles/Home.module.css";
 import { useRouter } from "next/navigation";
 import { findTaskAndClaim, findFirstTaskInProgress } from "../../utils/helpers";
 import { FormDisplay } from "@/components/FormDisplay";
@@ -92,10 +93,7 @@ export default function Loan(props: Props) {
       const client = await orkesConductorClient(props.conductor);
       try {
         const executor = new HumanExecutor(client);
-        await executor.completeTask(
-          props.task.taskId,
-          formState,
-        );
+        await executor.completeTask(props.task.taskId, formState);
       } catch (e) {
         console.log(e);
         setShowErrors(true);
@@ -111,25 +109,36 @@ export default function Loan(props: Props) {
     props.template != null;
 
   return (
-    <Stack spacing={2} mt={20} pl={20} pr={20}>
-      {taskIsDooable ? (
-        <>
-          <FormDisplay
-            template={props.template!}
-            formState={formState}
-            onFormChange={setFormState}
-            displayErrors={showErrors}
-          />
-          <Button onClick={completeStep}>Complete</Button>
-        </>
-      ) : (
-        <Box sx={{ margin: "auto" }}>
-          <Typography sx={{ color: "red" }}>
-            Thanks will let you know shortly
-          </Typography>
-          <Button onClick={() => router.push("/")}>Go Home</Button>
-        </Box>
-      )}
-    </Stack>
+    <>
+      <Head>
+        <title>Loan Approval</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main className={styles.main}>
+        <Paper sx={{ padding: 20 }}>
+          <Stack spacing={2} >
+            {taskIsDooable ? (
+              <>
+                <FormDisplay
+                  template={props.template!}
+                  formState={formState}
+                  onFormChange={setFormState}
+                  displayErrors={showErrors}
+                />
+                <Button onClick={completeStep}>Complete</Button>
+              </>
+            ) : (
+              <Box sx={{ margin: "auto" }}>
+                <Typography sx={{ color: "red" }}>
+                  Thanks will let you know shortly
+                </Typography>
+                <Button onClick={() => router.push("/")}>Go Home</Button>
+              </Box>
+            )}
+          </Stack>
+        </Paper>
+      </main>
+    </>
   );
 }

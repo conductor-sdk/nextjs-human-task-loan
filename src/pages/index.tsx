@@ -16,7 +16,7 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <Paper sx={{ padding: 20 }}>
-          <Typography variant="h1">Loan Example</Typography>
+          <Typography variant="h2">Loan Example</Typography>
           <Typography variant="subtitle1" color={"#969499"} paragraph>
             Basic example that runs the user through a loan request. The user
             will be asked to fill out a form and then the loan will be approved

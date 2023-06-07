@@ -1,11 +1,15 @@
-import { InboxLayout } from "@/components/elements/admin/InboxLayout";
+import { LoanApprovals } from "@/components/elements/admin/LoanApprovals";
 import {
   orkesConductorClient,
   HumanTaskEntry,
   HumanExecutor,
 } from "@io-orkes/conductor-javascript";
+
+import { Stack, Typography, Button, Box, Paper } from "@mui/material";
 import getConfig from "next/config";
 import { useRouter } from "next/navigation";
+import styles from "@/styles/Home.module.css";
+import Head from "next/head";
 import {
   assignTaskAndClaim,
   getClaimedAndUnClaimedTasksForAssignee,
@@ -78,12 +82,29 @@ export default function Test({
   };
 
   return (
-    <InboxLayout
-      unClaimedTasks={unClaimedTasks}
-      claimedTasks={claimedTasks}
-      onSelectTicket={handleSelectTask}
-    >
-      {null}
-    </InboxLayout>
+    <>
+      <Head>
+        <title>Loan Approval</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main className={styles.main}>
+        <Box>
+          <Box sx={{ marginLeft: 20, marginRight: 20 }}>
+            <Button variant="text" href={`/`} fullWidth={false}>
+              Home
+            </Button>
+          </Box>
+
+          <Paper sx={{ marginLeft: 20, marginRight: 20 }} variant="outlined">
+            <LoanApprovals
+              claimedTasks={claimedTasks}
+              unClaimedTasks={unClaimedTasks}
+              onSelectTask={handleSelectTask}
+            />
+          </Paper>
+        </Box>
+      </main>
+    </>
   );
 }

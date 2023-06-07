@@ -16,6 +16,7 @@ import {
 } from "@io-orkes/conductor-javascript";
 import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
+import styles from "@/styles/Home.module.css";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { publicRuntimeConfig } = getConfig();
@@ -61,52 +62,57 @@ export default function MyOrders({ tasks, completedTasks, userId }: Props) {
         <title>User Tasks</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main style={{ padding: 20 }}>
-        <Box sx={{ marginLeft: 20, marginRight: 20 }}>
-          <Button variant="text" href={`/`} fullWidth={false}>
-            {"<"} Return to main
-          </Button>
-        </Box>
-        <Paper sx={{ marginLeft: 20, marginRight: 20 }} variant="outlined">
-          <Stack spacing={2}>
-            <Typography variant="h4" paragraph p={1}>
-              {userId} Loans
-            </Typography>
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Id</TableCell>
-                    <TableCell align="right">Date</TableCell>
-                    <TableCell align="right">Task Name</TableCell>
-                    <TableCell align="right">Status</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {tasks.concat(completedTasks).map((row) => (
-                    <TableRow
-                      key={row.workflowId}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {row.state === "COMPLETED" ? (
-                          row.workflowId
-                        ) : (
-                          <Link href={`/loan/${row.workflowId}`}>
-                            {row.workflowId}
-                          </Link>
-                        )}
-                      </TableCell>
-                      <TableCell align="right">{row.createdOn}</TableCell>
-                      <TableCell align="right">{row.taskName}</TableCell>
-                      <TableCell align="right">{row.state}</TableCell>
+      <main className={styles.main}>
+        <Box>
+          <Box sx={{ marginLeft: 20, marginRight: 20 }}>
+            <Button variant="text" href={`/`} fullWidth={false}>
+              Home
+            </Button>
+          </Box>
+
+          <Paper sx={{ marginLeft: 20, marginRight: 20 }} variant="outlined">
+            <Stack spacing={2}>
+              <Typography variant="h4" paragraph p={1}>
+                {userId} Loans
+              </Typography>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Id</TableCell>
+                      <TableCell align="right">Date</TableCell>
+                      <TableCell align="right">Task Name</TableCell>
+                      <TableCell align="right">Status</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Stack>
-        </Paper>
+                  </TableHead>
+                  <TableBody>
+                    {tasks.concat(completedTasks).map((row) => (
+                      <TableRow
+                        key={row.workflowId}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {row.state === "COMPLETED" ? (
+                            row.workflowId
+                          ) : (
+                            <Link href={`/loan/${row.workflowId}`}>
+                              {row.workflowId}
+                            </Link>
+                          )}
+                        </TableCell>
+                        <TableCell align="right">{row.createdOn}</TableCell>
+                        <TableCell align="right">{row.taskName}</TableCell>
+                        <TableCell align="right">{row.state}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Stack>
+          </Paper>
+        </Box>
       </main>
     </>
   );

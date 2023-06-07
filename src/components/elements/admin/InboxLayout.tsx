@@ -69,7 +69,7 @@ export const InboxLayout = (props: Props) => {
       </Box>
       <Stack>
         <Grid container sx={{ height: "100%" }}>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <Paper variant="outlined" sx={{ height: "100%" }}>
               <List
                 sx={{
