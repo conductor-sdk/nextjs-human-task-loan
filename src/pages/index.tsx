@@ -1,15 +1,9 @@
 import Head from "next/head";
-import {
-  Paper,
-  Typography,
-  Box,
-  Stack,
-  Button,
-} from "@mui/material";
-import { Inter } from "next/font/google";
+import { Paper, Typography, Box, Stack, Button } from "@mui/material";
 import styles from "@/styles/Home.module.css";
+import CreditScoreIcon from '@mui/icons-material/CreditScore';
+import ApprovalIcon from '@mui/icons-material/Approval';
 
-const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
@@ -23,34 +17,40 @@ export default function Home() {
       <main className={styles.main}>
         <Paper sx={{ padding: 20 }}>
           <Typography variant="h1">Loan Example</Typography>
-          <Typography variant="subtitle1" paragraph noWrap={false}>
+          <Typography variant="subtitle1" color={"#969499"} paragraph>
             Basic example that runs the user through a loan request. The user
             will be asked to fill out a form and then the loan will be approved
             or denied.
           </Typography>
-          <Box mt={3} sx={{display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <Stack direction="row" spacing={2}>
+          <Box
+            mt={3}
+            sx={{
+              display: "flex",
+            }}
+          >
+            <Stack direction="column" spacing={2}>
               <Box>
                 <Button
-                  variant="contained"
+                  variant="text"
                   color="primary"
                   href="/loan"
                   size="medium"
+                  startIcon={<CreditScoreIcon/>}
                 >
                   Start/Continue Loan Request
                 </Button>
               </Box>
               <Box>
                 <Button
-                  variant="contained"
+                  variant="text"
                   color="primary"
                   href="/admin"
                   size="medium"
+                  startIcon={<ApprovalIcon/>}
                 >
                   Approve Reject Loans
                 </Button>
               </Box>
-
             </Stack>
           </Box>
         </Paper>
