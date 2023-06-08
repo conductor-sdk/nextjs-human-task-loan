@@ -1,4 +1,4 @@
-import { Stack, Typography, Button, Box } from "@mui/material";
+import { Stack } from "@mui/material";
 import getConfig from "next/config";
 import {
   orkesConductorClient,
@@ -10,7 +10,6 @@ import { GetServerSidePropsContext } from "next";
 import {
   TaskTable,
   StatusRenderer,
-  OpenButton,
 } from "@/components/elements/table/Table";
 import { MainTitle } from "@/components/elements/texts/Typographys";
 import _path from "lodash/fp/path";
@@ -19,6 +18,8 @@ import MainLayout from "@/components/MainLayout";
 
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
+import { OpenButton } from "@/components/elements/buttons/Buttons";
+
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { publicRuntimeConfig } = getConfig();
   const clientPromise = orkesConductorClient(publicRuntimeConfig.conductor);
@@ -73,9 +74,6 @@ const columnRenderer: Record<string, (n: HumanTaskEntry) => ReactNode> = {
 
 export default function MyOrders({ tasks, completedTasks, userId }: Props) {
   const router = useRouter();
-  const handleTaskClick = (task: HumanTaskEntry) => {
-    router.push(`/loan/${task.workflowId}`);
-  };
   return (
     <MainLayout title="Loan Inbox">
       <Stack spacing={6} justifyContent={"center"} alignItems={"center"}>
@@ -83,7 +81,6 @@ export default function MyOrders({ tasks, completedTasks, userId }: Props) {
         <TaskTable
           tasks={tasks.concat(completedTasks)}
           columns={columnRenderer}
-          onSelectTask={handleTaskClick}
         />
       </Stack>
     </MainLayout>

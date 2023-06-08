@@ -62,23 +62,6 @@ export const StatusRenderer = ({ state }: { state: TaskState }) => {
   );
 };
 
-export const OpenButton = (buttonProps: ButtonProps) => {
-  return (
-    <Button
-      variant="contained"
-      sx={{
-        width: "86px",
-        height: "25px",
-        borderRadius: "108px",
-        fontWeight: 400,
-        fontSize: "16px",
-        textAlign: "center",
-        background: "#686868",
-      }}
-      {...buttonProps}
-    />
-  );
-};
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -113,10 +96,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 type Props = {
   columns: Record<string, (n: HumanTaskEntry) => ReactNode>;
   tasks: HumanTaskEntry[];
-  onSelectTask: (task: HumanTaskEntry) => void;
 };
 
-export const TaskTable = ({ columns, tasks, onSelectTask }: Props) => {
+export const TaskTable = ({ columns, tasks }: Props) => {
   const columnNames = Object.keys(columns);
   return (
     <TableContainer component={Paper}>

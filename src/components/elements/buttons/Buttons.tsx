@@ -50,3 +50,23 @@ export const PrimaryButton = (buttonProps: ButtonProps) => {
     />
   );
 };
+
+export const OpenButton = (buttonProps: ButtonProps) => {
+  return (
+    <Button
+      variant="contained"
+      sx={{
+        width: "86px",
+        height: "25px",
+        borderRadius: "108px",
+        fontWeight: 400,
+        fontSize: "16px",
+        textAlign: "center",
+        background: "#686868",
+        textTransform: "none",
+        color: "#FFFFFF",
+      }}
+      {...buttonProps}
+    />
+  );
+};

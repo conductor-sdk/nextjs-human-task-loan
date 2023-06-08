@@ -1,19 +1,22 @@
-import { LoanApprovals } from "@/components/elements/admin/LoanApprovals";
+import { ReactNode, useMemo } from "react";
 import {
   orkesConductorClient,
   HumanTaskEntry,
   HumanExecutor,
 } from "@io-orkes/conductor-javascript";
 
-import { Stack, Typography, Button, Box, Paper } from "@mui/material";
+import { MainTitle } from "@/components/elements/texts/Typographys";
+import MainLayout from "@/components/MainLayout";
+import { Button, Box, Paper, Stack } from "@mui/material";
 import getConfig from "next/config";
 import { useRouter } from "next/navigation";
-import styles from "@/styles/Home.module.css";
-import Head from "next/head";
 import {
+  formatDate,
   assignTaskAndClaim,
   getClaimedAndUnClaimedTasksForAssignee,
 } from "../../utils/helpers";
+import { TaskTable, StatusRenderer } from "@/components/elements/table/Table";
+import { OpenButton } from "@/components/elements/buttons/Buttons";
 
 export async function getServerSideProps() {
   const { publicRuntimeConfig } = getConfig();
@@ -52,7 +55,14 @@ type Props = {
   claimedTasks: HumanTaskEntry[];
 };
 
-export default function Test({
+const columnRenderer: Record<string, (n: HumanTaskEntry) => ReactNode> = {
+  Id: (t: HumanTaskEntry) => t.taskId!,
+  Date: (t: HumanTaskEntry) => formatDate(t.createdOn!),
+  "Task Name": (t: HumanTaskEntry) => t.taskName!,
+  Status: (t: HumanTaskEntry) => <StatusRenderer state={t.state!} />,
+};
+
+export default function Admin({
   conductor,
   unClaimedTasks,
   claimedTasks,
@@ -80,31 +90,22 @@ export default function Test({
     }
     router.push(`/admin/${task.taskId}`);
   };
+  const tasks = unClaimedTasks.concat(claimedTasks);
+  const columnsWithContext = useMemo(() => {
+    return {
+      ...columnRenderer,
+      Open: (t: HumanTaskEntry) => (
+        <OpenButton onClick={() => handleSelectTask(t)}>Open</OpenButton>
+      ),
+    };
+  }, [handleSelectTask]);
 
   return (
-    <>
-      <Head>
-        <title>Loan Approval</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <Box>
-          <Box sx={{ marginLeft: 20, marginRight: 20 }}>
-            <Button variant="text" href={`/`} fullWidth={false}>
-              Home
-            </Button>
-          </Box>
-
-          <Paper sx={{ marginLeft: 20, marginRight: 20 }} variant="outlined">
-            <LoanApprovals
-              claimedTasks={claimedTasks}
-              unClaimedTasks={unClaimedTasks}
-              onSelectTask={handleSelectTask}
-            />
-          </Paper>
-        </Box>
-      </main>
-    </>
+    <MainLayout title="Loan Inbox">
+      <Stack spacing={6} justifyContent={"center"} alignItems={"center"}>
+        <MainTitle>Loan Inbox</MainTitle>
+        <TaskTable tasks={tasks} columns={columnsWithContext} />
+      </Stack>
+    </MainLayout>
   );
 }
