@@ -17,6 +17,15 @@ import { FormDisplay } from "@/components/FormDisplay";
 import { GetServerSidePropsContext } from "next";
 import styles from "@/styles/Home.module.css";
 
+import { MainTitle } from "@/components/elements/texts/Typographys";
+import MainLayout from "@/components/MainLayout";
+import {
+  TaskTable,
+  StatusRenderer,
+} from "@/components/elements/table/Table";
+import { ReactNode } from "react";
+import { OpenButton } from "@/components/elements/buttons/Buttons";
+
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { publicRuntimeConfig } = getConfig();
   const clientPromise = orkesConductorClient(publicRuntimeConfig.conductor);
@@ -150,14 +159,10 @@ export default function Test({
   }, [selectedTask]);
 
   return (
-    <>
-      <Head>
-        <title>Loan Approval</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <Paper sx={{ padding: 20 }}>
+    <MainLayout title="Loan App">
+      <Stack spacing={6} justifyContent={"center"} alignItems={"center"}>
+        <MainTitle>Loan App</MainTitle>
+        
           <FormDisplay
             key={selectedTaskId}
             template={template!}
@@ -174,8 +179,36 @@ export default function Test({
             <Button onClick={handleDone}>Done</Button>
             <Button onClick={handleUpdate}>Update</Button>
           </Stack>
-        </Paper>
-      </main>
-    </>
-  );
+      </Stack>
+    </MainLayout>
+  )
 }
+// (
+//     <>
+//       <Head>
+//         <title>Loan Approval</title>
+//         <link rel="icon" href="/favicon.ico" />
+//       </Head>
+//
+//       <main className={styles.main}>
+//         <Paper sx={{ padding: 20 }}>
+//           <FormDisplay
+//             key={selectedTaskId}
+//             template={template!}
+//             formState={defaultValues}
+//             displayErrors={error}
+//             onFormChange={setFormState}
+//           />
+//           <Stack
+//             width={"100%"}
+//             direction={"row"}
+//             justifyContent={"space-between"}
+//             mt={2}
+//           >
+//             <Button onClick={handleDone}>Done</Button>
+//             <Button onClick={handleUpdate}>Update</Button>
+//           </Stack>
+//         </Paper>
+//       </main>
+//     </>
+//   )

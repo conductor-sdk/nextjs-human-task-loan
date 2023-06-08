@@ -16,7 +16,6 @@ import _path from "lodash/fp/path";
 import { formatDate } from "@/utils/helpers";
 import MainLayout from "@/components/MainLayout";
 
-import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { OpenButton } from "@/components/elements/buttons/Buttons";
 
@@ -73,7 +72,6 @@ const columnRenderer: Record<string, (n: HumanTaskEntry) => ReactNode> = {
 };
 
 export default function MyOrders({ tasks, completedTasks, userId }: Props) {
-  const router = useRouter();
   return (
     <MainLayout title="Loan Inbox">
       <Stack spacing={6} justifyContent={"center"} alignItems={"center"}>
