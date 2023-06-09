@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useState } from "react";
 import { Button, Stack, Typography, Box, Paper } from "@mui/material";
+import { PrimaryButton } from "@/components/elements/buttons/Buttons";
 import {
   orkesConductorClient,
   Workflow,
@@ -14,6 +15,15 @@ import styles from "@/styles/Home.module.css";
 import { useRouter } from "next/navigation";
 import { findTaskAndClaim, findFirstTaskInProgress } from "../../utils/helpers";
 import { FormDisplay } from "@/components/FormDisplay";
+import { formatDate } from "@/utils/helpers";
+import MainLayout from "@/components/MainLayout";
+import {
+  MainTitle,
+  SubText1,
+  SubText2,
+} from "@/components/elements/texts/Typographys";
+import { ReactNode } from "react";
+import { OpenButton } from "@/components/elements/buttons/Buttons";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { publicRuntimeConfig } = getConfig();
@@ -109,36 +119,39 @@ export default function Loan(props: Props) {
     props.template != null;
 
   return (
-    <>
-      <Head>
-        <title>Loan Approval</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <Paper sx={{ padding: 20 }}>
-          <Stack spacing={2} >
-            {taskIsDooable ? (
-              <>
-                <FormDisplay
-                  template={props.template!}
-                  formState={formState}
-                  onFormChange={setFormState}
-                  displayErrors={showErrors}
-                />
-                <Button onClick={completeStep}>Complete</Button>
-              </>
-            ) : (
-              <Box sx={{ margin: "auto" }}>
-                <Typography sx={{ color: "red" }}>
-                  Thanks will let you know shortly
-                </Typography>
-                <Button onClick={() => router.push("/")}>Go Home</Button>
-              </Box>
-            )}
-          </Stack>
-        </Paper>
-      </main>
-    </>
+    <MainLayout title="Most Trusted">
+      <Stack spacing={6} justifyContent={"center"} alignItems={"center"}>
+        {taskIsDooable ? (
+          <>
+            <MainTitle>Most Trusted</MainTitle>
+            <FormDisplay
+              template={props.template!}
+              formState={formState}
+              onFormChange={setFormState}
+              displayErrors={showErrors}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+              width="100%"
+            >
+              <PrimaryButton onClick={completeStep}>Next</PrimaryButton>
+            </Box>
+          </>
+        ) : (
+          <>
+            <MainTitle>Student Loan Application</MainTitle>
+            <Box>
+              <SubText2 paragraph>
+                Thank you for filling our application!
+              </SubText2>
+              <SubText2>You will be notified of any status change.</SubText2>
+            </Box>
+          </>
+        )}
+      </Stack>
+    </MainLayout>
   );
 }
