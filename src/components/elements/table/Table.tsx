@@ -10,6 +10,7 @@ import { HumanTaskEntry } from "@io-orkes/conductor-javascript";
 import { styled } from "@mui/material/styles";
 import { ReactNode, useState, useMemo } from "react";
 import { visuallyHidden } from "@mui/utils";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 type TaskState =
   | "ASSIGNED"
@@ -114,7 +115,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
       <TableRow>
         {columns.map((c) => (
           <StyledTableCell
-            key={columnRenderers[c].sortId}
+            key={c}
             align={"left"}
             {...(columnRenderers[c].sortId != null
               ? {
@@ -126,6 +127,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             <TableSortLabel
               active={orderBy === columnRenderers[c].sortId}
               direction={orderBy === columnRenderers[c].sortId ? order : "asc"}
+              IconComponent={KeyboardArrowDownIcon}
               {...(columnRenderers[c].sortId != null
                 ? { onClick: createSortHandler(columnRenderers[c].sortId!) }
                 : {})}
