@@ -28,12 +28,16 @@ const ClosableTitleBar = ({ title }: { title: string }) => {
         <Box>
           <Stack direction={"row"} spacing={2}>
             <FakeLogo />
-            <Typography sx={{
-              fontSize: "14px",
-              fontWeight: "700",
-              lineHeight: "17px",
-              color: "#000000",
-            }}>National Bank</Typography>
+            <Typography
+              sx={{
+                fontSize: "14px",
+                fontWeight: "700",
+                lineHeight: "17px",
+                color: "#000000",
+              }}
+            >
+              National Bank
+            </Typography>
           </Stack>
         </Box>
         <Box
@@ -93,6 +97,37 @@ export default function MainLayout({ title, children }: Props) {
       >
         <Box p={10}>{children}</Box>
       </main>
+      <div
+        style={{
+          position: "fixed",
+          bottom: "0",
+          right: 10,
+          zIndex: 9999,
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Box>
+          <a href="https://orkes.io/">
+            <img
+              src="/orkesLogo.png"
+              alt="orkesLogo"
+              width="100px"
+              height="50px"
+            />
+          </a>
+        </Box>
+        <p
+          style={{
+            marginLeft: "10px",
+            color: "#000",
+            opacity: "0.5",
+            fontSize: "15px",
+          }}
+        >
+          Powered by Orkes
+        </p>
+      </div>
     </>
   );
 }
