@@ -23,7 +23,7 @@ const stateToColor = (state: TaskState) => {
     case "COMPLETED":
       return "#5AD4A1";
     case "IN_PROGRESS":
-      return "#FFD700";
+      return "#FCA729";
     default:
       return "#FCA729";
   }

@@ -95,7 +95,7 @@ export default function Loan({ conductor, workflows, correlationId }: Props) {
           <SecondaryButton onClick={handleRequestForLoan} disabled={hasUserId}>
             Start a New Loan
           </SecondaryButton>
-          <PrimaryButton href={`/loan/user/${userId}`}>
+          <PrimaryButton href={`/loan/user/${userId}`} disabled={hasUserId}>
             Continue Existing Loan
           </PrimaryButton>
         </Stack>

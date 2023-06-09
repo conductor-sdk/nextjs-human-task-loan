@@ -92,7 +92,7 @@ export default function MainLayout({ title, children }: Props) {
           alignContent: "center",
           justifyContent: "space-between",
           alignItems: "center",
-          marginTop: "120px",
+          marginTop: "100px",
         }}
       >
         <Box p={10}>{children}</Box>

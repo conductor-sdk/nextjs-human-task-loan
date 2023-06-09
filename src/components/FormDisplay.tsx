@@ -12,6 +12,11 @@ import DescriptionTextControl from "./DescriptionTextControl";
 
 export const baseTheme = createTheme({
   components: {
+    MuiPaper: {
+      defaultProps: {
+        elevation: 0,
+      },
+    },
     MuiFormControl: {
       defaultProps: {
         variant: "filled",
