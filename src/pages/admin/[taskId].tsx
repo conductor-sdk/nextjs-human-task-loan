@@ -10,7 +10,7 @@ import getConfig from "next/config";
 import { useRouter } from "next/navigation";
 import { FormDisplay } from "@/components/FormDisplay";
 import { GetServerSidePropsContext } from "next";
-
+import { PrimaryButton,SecondaryButton } from "@/components/elements/buttons/Buttons"; 
 import { MainTitle } from "@/components/elements/texts/Typographys";
 import MainLayout from "@/components/MainLayout";
 
@@ -135,10 +135,11 @@ export default function Test({
             width={"100%"}
             direction={"row"}
             justifyContent={"space-between"}
+            spacing={2}
             mt={2}
           >
-            <Button onClick={handleDone}>Done</Button>
-            <Button onClick={handleUpdate}>Update</Button>
+            <SecondaryButton onClick={handleUpdate}>Update</SecondaryButton>
+            <PrimaryButton onClick={handleDone}>Done</PrimaryButton>
           </Stack>
       </Stack>
     </MainLayout>

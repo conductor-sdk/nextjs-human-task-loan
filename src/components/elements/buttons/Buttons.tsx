@@ -1,7 +1,4 @@
-import {
-  Button,
-  ButtonProps,
-} from "@mui/material";
+import { Button, ButtonProps } from "@mui/material";
 
 const fontStyles = {
   fontWeight: "400",
@@ -14,7 +11,8 @@ const buttonStyles = {
   borderRadius: "108px",
   textTransform: "none",
   height: "33px",
-  width: "210px",
+  paddingLeft: "33px",
+  paddingRight: "33px",
 };
 
 export const SecondaryButton = (buttonProps: ButtonProps) => {
