@@ -1,6 +1,6 @@
 import React from "react";
 import _isUndefined from "lodash/isUndefined";
-import { Typography, FormControl } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 
 export interface DescriptionTextProps {
   id?: string;
@@ -37,7 +37,7 @@ const DescriptionText: React.FC<DescriptionTextProps> = ({
   label,
 }) => {
   return (
-    <FormControl>
+    <Box mb={2}>
       <Typography
         key={id}
         align={align}
@@ -47,7 +47,7 @@ const DescriptionText: React.FC<DescriptionTextProps> = ({
       >
         {_isUndefined(value) ? label : value}
       </Typography>
-    </FormControl>
+    </Box>
   );
 };
 

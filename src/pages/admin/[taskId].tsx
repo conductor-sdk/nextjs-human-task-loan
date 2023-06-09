@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { Stack, Button } from "@mui/material";
-import { InboxLayout } from "@/components/elements/admin/InboxLayout";
+import { useState, useMemo } from "react";
+import { Stack, Button, } from "@mui/material";
 import {
   orkesConductorClient,
   HumanTaskEntry,
@@ -9,23 +8,16 @@ import {
 } from "@io-orkes/conductor-javascript";
 import getConfig from "next/config";
 import { useRouter } from "next/navigation";
-import {
-  assignTaskAndClaim,
-  getClaimedAndUnClaimedTasksForAssignee,
-} from "../helpers";
 import { FormDisplay } from "@/components/FormDisplay";
 import { GetServerSidePropsContext } from "next";
+import { PrimaryButton,SecondaryButton } from "@/components/elements/buttons/Buttons"; 
+import { MainTitle } from "@/components/elements/texts/Typographys";
+import MainLayout from "@/components/MainLayout";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { publicRuntimeConfig } = getConfig();
   const clientPromise = orkesConductorClient(publicRuntimeConfig.conductor);
   const client = await clientPromise;
-  const humanExecutor = new HumanExecutor(client);
-  const { claimedTasks, unClaimedTasks } =
-    await getClaimedAndUnClaimedTasksForAssignee(
-      humanExecutor,
-      "approval-interim-group"
-    );
   const selectedTaskId = context.params?.taskId as string;
   if (selectedTaskId) {
     const selectedTask = await client.humanTask.getTask1(selectedTaskId);
@@ -42,8 +34,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         },
         workflows: publicRuntimeConfig.workflows,
         correlationId: publicRuntimeConfig.workflows.correlationId,
-        claimedTasks,
-        unClaimedTasks,
         selectedTask,
         selectedTaskId: selectedTaskId,
         template,
@@ -60,8 +50,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
       workflows: publicRuntimeConfig.workflows,
       correlationId: publicRuntimeConfig.workflows.correlationId,
-      claimedTasks,
-      unClaimedTasks,
       selectedTask: null,
       template: null,
     },
@@ -84,8 +72,6 @@ type Props = {
 
 export default function Test({
   conductor,
-  claimedTasks,
-  unClaimedTasks,
   template,
   selectedTask,
   selectedTaskId,
@@ -94,30 +80,9 @@ export default function Test({
     Record<string, Record<string, any>>
   >(selectedTask?.predefinedInput || {});
   const [error, setError] = useState<boolean>(false);
+  console.log("selectedTask", selectedTask);
 
   const router = useRouter();
-
-  const handleSelectTask = async (selectedTask: HumanTaskEntry) => {
-    const { taskId, state } = selectedTask;
-    let task = selectedTask;
-
-    const client = await orkesConductorClient(conductor);
-    if (state === "ASSIGNED") {
-      try {
-        const humanExecutor = new HumanExecutor(client);
-        const claimedTask = await assignTaskAndClaim(
-          humanExecutor,
-          taskId!,
-          "admin"
-        );
-
-        task = claimedTask;
-      } catch (error: any) {
-        console.log("error", error);
-      }
-    }
-    router.replace(`/admin/${task.taskId}`);
-  };
 
   const handleDone = async () => {
     const humanExecutor = new HumanExecutor(
@@ -126,7 +91,6 @@ export default function Test({
     try {
       await humanExecutor.completeTask(selectedTask!.taskId!, formState);
       router.push("/admin");
-      console.log("Completed task");
       setFormState({});
     } catch (error: any) {
       console.log("error", error);
@@ -141,7 +105,6 @@ export default function Test({
     try {
       await humanExecutor.updateTaskOutput(selectedTask!.taskId!, formState);
       router.push("/admin");
-      console.log("Task updated");
       setFormState({});
     } catch (error: any) {
       console.log("error", error);
@@ -149,29 +112,36 @@ export default function Test({
     }
   };
 
+  const defaultValues = useMemo(() => {
+    return {
+      ...(selectedTask?.predefinedInput || {}),
+      ...(selectedTask?.output || {}),
+    };
+  }, [selectedTask]);
+
   return (
-    <InboxLayout
-      unClaimedTasks={unClaimedTasks}
-      claimedTasks={claimedTasks}
-      onSelectTicket={handleSelectTask}
-      selectedTask={selectedTask!}
-    >
-      <FormDisplay
-        key={selectedTaskId}
-        template={template!}
-        formState={selectedTask?.predefinedInput || {}}
-        displayErrors={error}
-        onFormChange={setFormState}
-      />
-      <Stack
-        width={"100%"}
-        direction={"row"}
-        justifyContent={"space-between"}
-        mt={2}
-      >
-        <Button onClick={handleDone}>Done</Button>
-        <Button onClick={handleUpdate}>Update</Button>
+    <MainLayout title="Loan App">
+      <Stack spacing={6} justifyContent={"center"} alignItems={"center"}>
+        <MainTitle>Loan App</MainTitle>
+        
+          <FormDisplay
+            key={selectedTaskId}
+            template={template!}
+            formState={defaultValues}
+            displayErrors={error}
+            onFormChange={setFormState}
+          />
+          <Stack
+            width={"100%"}
+            direction={"row"}
+            justifyContent={"space-between"}
+            spacing={2}
+            mt={2}
+          >
+            <SecondaryButton onClick={handleUpdate}>Update</SecondaryButton>
+            <PrimaryButton onClick={handleDone}>Done</PrimaryButton>
+          </Stack>
       </Stack>
-    </InboxLayout>
-  );
+    </MainLayout>
+  )
 }

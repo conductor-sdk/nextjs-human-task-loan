@@ -1,8 +1,8 @@
-import { Roboto } from '@next/font/google';
+import { Fira_Sans } from '@next/font/google';
 import { createTheme } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
 
-export const roboto = Roboto({
+export const firaSans = Fira_Sans({
   weight: ['300', '400', '500', '700'],
   subsets: ['latin'],
   display: 'swap',
@@ -13,17 +13,17 @@ export const roboto = Roboto({
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#556cd6',
+      main: '#rgba(0, 0, 0, 0.6)',
     },
     secondary: {
-      main: '#19857b',
+      main: '#F1F6F7',
     },
     error: {
       main: red.A400,
     },
   },
   typography: {
-    fontFamily: roboto.style.fontFamily,
+    fontFamily: firaSans.style.fontFamily,
   },
 });
 
