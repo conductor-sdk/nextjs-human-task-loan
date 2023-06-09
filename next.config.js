@@ -11,11 +11,10 @@ module.exports = {
       serverUrl: process.env.SERVER_URL,
     },
     workflows: {
-      requestForLoan: `${
-        process.env.WF_NAME || "loan-origination-flow-test"
-      }`,
+      requestForLoan: `${process.env.WF_NAME || "loan-origination-flow-test"}`,
       correlationId: "aCorrelationId",
     },
   },
-  reactStrictMode: false
+  reactStrictMode: false,
+  output: "standalone",
 };

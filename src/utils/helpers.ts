@@ -2,6 +2,7 @@ import {
   HumanTaskEntry,
   HumanExecutor,
 } from "@io-orkes/conductor-javascript";
+import { format } from "date-fns";
 
 export const assignTaskAndClaim = async (
   executor: HumanExecutor,
@@ -52,4 +53,14 @@ export const getClaimedAndUnClaimedTasksForAssignee = async (
     assignee
   );
   return { claimedTasks, unClaimedTasks };
+};
+
+
+export const formatDate = (timestamp?: number): string => {
+  if (!timestamp) {
+    return "";
+  }
+  const dateObject = new Date(timestamp);
+  const prettyDate = format(dateObject, "dd/MM/yyyy");
+  return prettyDate;
 };

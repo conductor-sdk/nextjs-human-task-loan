@@ -1,15 +1,22 @@
-import { InboxLayout } from "@/components/elements/admin/InboxLayout";
+import { ReactNode, useMemo,useCallback } from "react";
 import {
   orkesConductorClient,
   HumanTaskEntry,
   HumanExecutor,
 } from "@io-orkes/conductor-javascript";
+
+import { MainTitle } from "@/components/elements/texts/Typographys";
+import MainLayout from "@/components/MainLayout";
+import { Stack } from "@mui/material";
 import getConfig from "next/config";
 import { useRouter } from "next/navigation";
 import {
+  formatDate,
   assignTaskAndClaim,
   getClaimedAndUnClaimedTasksForAssignee,
 } from "../../utils/helpers";
+import { TaskTable, StatusRenderer } from "@/components/elements/table/Table";
+import { OpenButton } from "@/components/elements/buttons/Buttons";
 
 export async function getServerSideProps() {
   const { publicRuntimeConfig } = getConfig();
@@ -48,13 +55,20 @@ type Props = {
   claimedTasks: HumanTaskEntry[];
 };
 
-export default function Test({
+const columnRenderer: Record<string, (n: HumanTaskEntry) => ReactNode> = {
+  Id: (t: HumanTaskEntry) => t.taskId!,
+  Date: (t: HumanTaskEntry) => formatDate(t.createdOn!),
+  "Task Name": (t: HumanTaskEntry) => t.taskName!,
+  Status: (t: HumanTaskEntry) => <StatusRenderer state={t.state!} />,
+};
+
+export default function Admin({
   conductor,
   unClaimedTasks,
   claimedTasks,
 }: Props) {
   const router = useRouter();
-  const handleSelectTask = async (selectedTask: HumanTaskEntry) => {
+  const handleSelectTask = useCallback(async (selectedTask: HumanTaskEntry) => {
     const { taskId, state } = selectedTask;
     let task = selectedTask;
 
@@ -75,15 +89,23 @@ export default function Test({
       }
     }
     router.push(`/admin/${task.taskId}`);
-  };
+  },[router,conductor]);
+  const tasks = unClaimedTasks.concat(claimedTasks);
+  const columnsWithContext = useMemo(() => {
+    return {
+      ...columnRenderer,
+      Open: (t: HumanTaskEntry) => (
+        <OpenButton onClick={() => handleSelectTask(t)}>Open</OpenButton>
+      ),
+    };
+  }, [handleSelectTask]);
 
   return (
-    <InboxLayout
-      unClaimedTasks={unClaimedTasks}
-      claimedTasks={claimedTasks}
-      onSelectTicket={handleSelectTask}
-    >
-      {null}
-    </InboxLayout>
+    <MainLayout title="Loan Inbox">
+      <Stack spacing={6} justifyContent={"center"} alignItems={"center"}>
+        <MainTitle>Loan Inbox</MainTitle>
+        <TaskTable tasks={tasks} columns={columnsWithContext} />
+      </Stack>
+    </MainLayout>
   );
 }
