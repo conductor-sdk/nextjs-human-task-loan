@@ -73,9 +73,11 @@ export default function Loan({ conductor, workflows, correlationId }: Props) {
           variant="filled"
           InputLabelProps={{
             shrink: true,
+            
           }}
           InputProps={{
             disableUnderline: true,
+            autoComplete: "off",
           }}
           sx={{
             "& .MuiInputBase-root": {
