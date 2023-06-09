@@ -63,13 +63,21 @@ const ClosableTitleBar = ({ title }: { title: string }) => {
           <TitleInTitleBar>{title}</TitleInTitleBar>
         </Box>
         <Box
-          className={styles.closeCircle}
           sx={{
-            border: "1px solid",
+            border: "1px solid #000000",
+            borderRadius: "50%",
+            width: "32px",
+            height: "32px",
+            display: "flex",
+            justifyContent: "center",
           }}
         >
           <IconButton href="/">
-            <CloseIcon />
+            <CloseIcon
+              sx={{
+                color: "#000000",
+              }}
+            />
           </IconButton>
         </Box>
       </Stack>
@@ -89,8 +97,12 @@ export default function MainLayout({ title, children }: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ClosableTitleBar title={title} />
-      <main className={styles.main}>
-        <Box>{children}</Box>
+      <main style={{
+        marginTop: "160px",
+      }}>
+        <Box p={10}>
+          {children}
+        </Box>
       </main>
     </>
   );
