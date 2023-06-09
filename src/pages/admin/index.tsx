@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useMemo,useCallback } from "react";
 import {
   orkesConductorClient,
   HumanTaskEntry,
@@ -7,7 +7,7 @@ import {
 
 import { MainTitle } from "@/components/elements/texts/Typographys";
 import MainLayout from "@/components/MainLayout";
-import { Button, Box, Paper, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import getConfig from "next/config";
 import { useRouter } from "next/navigation";
 import {
@@ -68,7 +68,7 @@ export default function Admin({
   claimedTasks,
 }: Props) {
   const router = useRouter();
-  const handleSelectTask = async (selectedTask: HumanTaskEntry) => {
+  const handleSelectTask = useCallback(async (selectedTask: HumanTaskEntry) => {
     const { taskId, state } = selectedTask;
     let task = selectedTask;
 
@@ -89,7 +89,7 @@ export default function Admin({
       }
     }
     router.push(`/admin/${task.taskId}`);
-  };
+  },[router,conductor]);
   const tasks = unClaimedTasks.concat(claimedTasks);
   const columnsWithContext = useMemo(() => {
     return {
