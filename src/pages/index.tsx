@@ -24,7 +24,7 @@ export default function Home() {
         <Stack spacing={2}>
           <SubText1>Check out a basic example for a loan application</SubText1>
           <Box>
-            <SubText2>The user will be asked to fill out a form.</SubText2>
+            <SubText2 paragraph>The user will be asked to fill out a form.</SubText2>
             <SubText2>Then the loan will be approved or denied</SubText2>
           </Box>
         </Stack>
