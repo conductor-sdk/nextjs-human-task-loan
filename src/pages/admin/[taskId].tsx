@@ -1,6 +1,5 @@
-import Head from "next/head";
 import { useState, useMemo } from "react";
-import { Stack, Button, Box, Paper } from "@mui/material";
+import { Stack, Button, } from "@mui/material";
 import {
   orkesConductorClient,
   HumanTaskEntry,
@@ -9,22 +8,11 @@ import {
 } from "@io-orkes/conductor-javascript";
 import getConfig from "next/config";
 import { useRouter } from "next/navigation";
-import {
-  assignTaskAndClaim,
-  getClaimedAndUnClaimedTasksForAssignee,
-} from "../../utils/helpers";
 import { FormDisplay } from "@/components/FormDisplay";
 import { GetServerSidePropsContext } from "next";
-import styles from "@/styles/Home.module.css";
 
 import { MainTitle } from "@/components/elements/texts/Typographys";
 import MainLayout from "@/components/MainLayout";
-import {
-  TaskTable,
-  StatusRenderer,
-} from "@/components/elements/table/Table";
-import { ReactNode } from "react";
-import { OpenButton } from "@/components/elements/buttons/Buttons";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { publicRuntimeConfig } = getConfig();

@@ -4,7 +4,7 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Paper, Typography, Button, ButtonProps } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import { HumanTaskEntry } from "@io-orkes/conductor-javascript";
 import { styled } from "@mui/material/styles";
 import { ReactNode } from "react";
@@ -61,7 +61,6 @@ export const StatusRenderer = ({ state }: { state: TaskState }) => {
     </StatusRendererContainer>
   );
 };
-
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
