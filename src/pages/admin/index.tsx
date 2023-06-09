@@ -1,4 +1,4 @@
-import { ReactNode, useMemo,useCallback } from "react";
+import { ReactNode, useMemo, useCallback } from "react";
 import {
   orkesConductorClient,
   HumanTaskEntry,
@@ -15,7 +15,11 @@ import {
   assignTaskAndClaim,
   getClaimedAndUnClaimedTasksForAssignee,
 } from "../../utils/helpers";
-import { TaskTable, StatusRenderer } from "@/components/elements/table/Table";
+import {
+  TaskTable,
+  StatusRenderer,
+  ValueRenderers,
+} from "@/components/elements/table/Table";
 import { OpenButton } from "@/components/elements/buttons/Buttons";
 
 export async function getServerSideProps() {
@@ -55,11 +59,23 @@ type Props = {
   claimedTasks: HumanTaskEntry[];
 };
 
-const columnRenderer: Record<string, (n: HumanTaskEntry) => ReactNode> = {
-  Id: (t: HumanTaskEntry) => t.taskId!,
-  Date: (t: HumanTaskEntry) => formatDate(t.createdOn!),
-  "Task Name": (t: HumanTaskEntry) => t.taskName!,
-  Status: (t: HumanTaskEntry) => <StatusRenderer state={t.state!} />,
+const columnRenderer: ValueRenderers = {
+  Id: {
+    renderer: (t: HumanTaskEntry) => t.taskId!,
+    sortId: "taskId",
+  },
+  Date: {
+    renderer: (t: HumanTaskEntry) => formatDate(t.createdOn!),
+    sortId: "createdOn",
+  },
+  "Task Name": {
+    renderer: (t: HumanTaskEntry) => t.taskName!,
+    sortId: "taskName",
+  },
+  Status: {
+    renderer: (t: HumanTaskEntry) => <StatusRenderer state={t.state!} />,
+    sortId: "state",
+  },
 };
 
 export default function Admin({
@@ -68,35 +84,40 @@ export default function Admin({
   claimedTasks,
 }: Props) {
   const router = useRouter();
-  const handleSelectTask = useCallback(async (selectedTask: HumanTaskEntry) => {
-    const { taskId, state } = selectedTask;
-    let task = selectedTask;
+  const handleSelectTask = useCallback(
+    async (selectedTask: HumanTaskEntry) => {
+      const { taskId, state } = selectedTask;
+      let task = selectedTask;
 
-    const humanExecutor = new HumanExecutor(
-      await orkesConductorClient(conductor)
-    );
-    if (state === "ASSIGNED") {
-      try {
-        const claimedTask = await assignTaskAndClaim(
-          humanExecutor,
-          taskId!,
-          "admin"
-        );
+      const humanExecutor = new HumanExecutor(
+        await orkesConductorClient(conductor)
+      );
+      if (state === "ASSIGNED") {
+        try {
+          const claimedTask = await assignTaskAndClaim(
+            humanExecutor,
+            taskId!,
+            "admin"
+          );
 
-        task = claimedTask;
-      } catch (error: any) {
-        console.log("error", error);
+          task = claimedTask;
+        } catch (error: any) {
+          console.log("error", error);
+        }
       }
-    }
-    router.push(`/admin/${task.taskId}`);
-  },[router,conductor]);
+      router.push(`/admin/${task.taskId}`);
+    },
+    [router, conductor]
+  );
   const tasks = unClaimedTasks.concat(claimedTasks);
   const columnsWithContext = useMemo(() => {
     return {
       ...columnRenderer,
-      Open: (t: HumanTaskEntry) => (
-        <OpenButton onClick={() => handleSelectTask(t)}>Open</OpenButton>
-      ),
+      Open: {
+        renderer: (t: HumanTaskEntry) => (
+          <OpenButton onClick={() => handleSelectTask(t)}>Open</OpenButton>
+        ),
+      },
     };
   }, [handleSelectTask]);
 
