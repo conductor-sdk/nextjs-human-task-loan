@@ -30,12 +30,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { publicRuntimeConfig } = getConfig();
   const clientPromise = orkesConductorClient(publicRuntimeConfig.conductor);
   const client = await clientPromise;
-  const humanExecutor = new HumanExecutor(client);
-  /* const { claimedTasks, unClaimedTasks } = */
-  /*   await getClaimedAndUnClaimedTasksForAssignee( */
-  /*     humanExecutor, */
-  /*     "approval-interim-group" */
-  /*   ); */
   const selectedTaskId = context.params?.taskId as string;
   if (selectedTaskId) {
     const selectedTask = await client.humanTask.getTask1(selectedTaskId);
@@ -98,6 +92,7 @@ export default function Test({
     Record<string, Record<string, any>>
   >(selectedTask?.predefinedInput || {});
   const [error, setError] = useState<boolean>(false);
+  console.log("selectedTask", selectedTask);
 
   const router = useRouter();
 

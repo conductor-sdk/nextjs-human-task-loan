@@ -1,33 +1,10 @@
 import Head from "next/head";
-import { ReactNode, FC, useState } from "react";
-import {
-  IconButton,
-  Stack,
-  Typography,
-  Box,
-  Paper,
-  AppBar,
-} from "@mui/material";
-import {
-  orkesConductorClient,
-  Workflow,
-  HumanTaskTemplateEntry,
-  HumanTaskEntry,
-  HumanExecutor,
-} from "@io-orkes/conductor-javascript";
-import { GetServerSidePropsContext } from "next";
-import getConfig from "next/config";
-import styles from "@/styles/Home.module.css";
-import { useRouter } from "next/navigation";
-import { FormDisplay } from "@/components/FormDisplay";
+import { ReactNode, FC } from "react";
+import { IconButton, Stack, Box, AppBar, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { FakeLogo } from "./elements/FakeLogo";
+import { TitleInTitleBar } from "@/components/elements/texts/Typographys";
 
-import {
-  MainTitle,
-  SubText1,
-  SubText2,
-  TitleInTitleBar,
-} from "@/components/elements/texts/Typographys";
 export const TitleBar: FC<{
   children: ReactNode;
 }> = ({ children }) => {
@@ -48,10 +25,17 @@ const ClosableTitleBar = ({ title }: { title: string }) => {
           padding: "20px",
         }}
       >
-        <img
-          src="/orkesLogo.png"
-          style={{ width: "140px", marginRight: "30px" }}
-        />
+        <Box>
+          <Stack direction={"row"} spacing={2}>
+            <FakeLogo />
+            <Typography sx={{
+              fontSize: "14px",
+              fontWeight: "700",
+              lineHeight: "17px",
+              color: "#000000",
+            }}>National Bank</Typography>
+          </Stack>
+        </Box>
         <Box
           sx={{
             display: "flex",
@@ -97,12 +81,17 @@ export default function MainLayout({ title, children }: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ClosableTitleBar title={title} />
-      <main style={{
-        marginTop: "160px",
-      }}>
-        <Box p={10}>
-          {children}
-        </Box>
+      <main
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignContent: "center",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: "120px",
+        }}
+      >
+        <Box p={10}>{children}</Box>
       </main>
     </>
   );
