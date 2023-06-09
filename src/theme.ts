@@ -13,7 +13,7 @@ export const firaSans = Fira_Sans({
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#FF4500',
+      main: '#rgba(0, 0, 0, 0.6)',
     },
     secondary: {
       main: '#F1F6F7',

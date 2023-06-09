@@ -1,6 +1,13 @@
 import Head from "next/head";
 import { ReactNode, FC, useState } from "react";
-import { Button, Stack, Typography, Box, Paper, AppBar } from "@mui/material";
+import {
+  IconButton,
+  Stack,
+  Typography,
+  Box,
+  Paper,
+  AppBar,
+} from "@mui/material";
 import {
   orkesConductorClient,
   Workflow,
@@ -61,7 +68,9 @@ const ClosableTitleBar = ({ title }: { title: string }) => {
             border: "1px solid",
           }}
         >
-          <CloseIcon />
+          <IconButton href="/">
+            <CloseIcon />
+          </IconButton>
         </Box>
       </Stack>
     </TitleBar>

@@ -10,66 +10,90 @@ import { JsonSchema, UISchemaElement } from "@jsonforms/core";
 import DescriptionTextTester from "./DescriptionTextTester";
 import DescriptionTextControl from "./DescriptionTextControl";
 
-const baseTheme = createTheme({
+export const baseTheme = createTheme({
   components: {
     MuiFormControl: {
+      defaultProps: {
+        variant: "filled",
+      },
       styleOverrides: {
         root: {
-          height: "47px",
-          marginBottom: 16,
-          background: "#F1F6F7",
-          borderRadius: "11px",
           "& label": {
-            padding: "5px 0px 4px 9px",
+            top: "20px",
+            left: "9px",
+            zIndex: 1,
+          },
+          "& .MuiInputBase-root": {
+            paddingTop: "18px",
           },
         },
       },
     },
+    MuiTextField: {
+      defaultProps: {
+        variant: "filled",
+        InputLabelProps: {
+          shrink: true,
+        },
+        InputProps: {
+          disableUnderline: true,
+        },
+      },
+    },
     MuiInputBase: {
+      defaultProps: {
+        //disableClearable: true,
+      },
       styleOverrides: {
         root: {
-          "&.Mui-disabled": {
-            "-webkit-text-fill-color": "#000000",
-          },
-          color: "#000000",
-          "& ::after": {
-            borderBottom: "none",
-          },
-          "& fieldset": {
-            border: "none",
+          background: "#F1F6F7",
+          borderRadius: "11px 11px 11px 11px !important",
+          "& .MuiInputAdornment-root": {
+            paddingRight: "15px",
+            marginBottom: "10px",
           },
         },
         input: {
-          padding: "5px 0px 4px 9px",
-          color: "#000000",
+          paddingLeft: "9px",
+          paddingRight: "9px",
           fontSize: "14px",
-          fontWeight: "600",
-          lineHeight: "20px",
-
-          "& :after": {
-            borderBottom: "none",
+        },
+      },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          "& .MuiInput-root": {
+            paddingLeft: "9px",
+            paddingRight: "9px",
+            fontSize: "14px",
           },
         },
       },
     },
     MuiInput: {
+      defaultProps: {
+        disableUnderline: true,
+      },
       styleOverrides: {
         root: {
-          "&.Mui-disabled": {
-            "-webkit-text-fill-color": "#000000",
-            color: "#000000",
-          },
           color: "#000000",
-          "&:before, :after, :hover:not(.Mui-disabled):before": {
-            borderBottom: 0,
-          },
         },
       },
     },
+    MuiInputLabel: {
+      defaultProps: {
+        filled: true,
+        shrink: true,
+      },
+    },
     MuiFormLabel: {
+      defaultProps: {
+        filled: true,
+      },
       styleOverrides: {
         root: {
-          padding: "5px 0px 4px 9px",
+          fontSize: "12px",
         },
       },
     },

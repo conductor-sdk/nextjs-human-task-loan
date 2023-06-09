@@ -1,20 +1,18 @@
 import { useState } from "react";
-import Head from "next/head";
-import {
-  Button,
-  Stack,
-  TextField,
-  Box,
-  Typography,
-  Paper,
-} from "@mui/material";
+import { Stack, Box, ThemeProvider, TextField } from "@mui/material";
 import {
   orkesConductorClient,
   WorkflowExecutor,
 } from "@io-orkes/conductor-javascript";
+import MainLayout from "@/components/MainLayout";
+import {
+  PrimaryButton,
+  SecondaryButton,
+} from "@/components/elements/buttons/Buttons";
+import { baseTheme } from "@/components/FormDisplay";
+import { MainTitle, SubText2 } from "@/components/elements/texts/Typographys";
 import getConfig from "next/config";
 import { useRouter } from "next/navigation";
-import styles from "@/styles/Home.module.css";
 
 export async function getServerSideProps() {
   const { publicRuntimeConfig } = getConfig();
@@ -42,7 +40,7 @@ type Props = {
   correlationId: string;
 };
 
-export default function Test({ conductor, workflows, correlationId }: Props) {
+export default function Loan({ conductor, workflows, correlationId }: Props) {
   const [userId, setUserId] = useState<string>("");
   const router = useRouter();
   const handleRequestForLoan = () => {
@@ -62,37 +60,47 @@ export default function Test({ conductor, workflows, correlationId }: Props) {
   const hasUserId = userId.trim().length == 0;
 
   return (
-    <>
-      <Head>
-        <title>Start Loan</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <Paper sx={{ padding: 20 }}>
-          <Typography paragraph>
-            Enter a user name to start a loan or see existing loans
-          </Typography>
-          <Stack direction="row" spacing={2}>
-            <Box>
-              <TextField
-                label="user-name"
-                variant="outlined"
-                onChange={(event) => setUserId(event.target.value)}
-                value={userId}
-              />
-            </Box>
-            <Stack spacing={2} direction="row">
-              <Button onClick={handleRequestForLoan} disabled={hasUserId}>
-                Request For Loan
-              </Button>
-              <Button href={`/loan/user/${userId}`} disabled={hasUserId}>
-                Continue existing loan
-              </Button>
-            </Stack>
-          </Stack>
-        </Paper>
-      </main>
-    </>
+    <MainLayout title="Most Trusted">
+      <Stack spacing={6} justifyContent={"center"} alignItems={"center"}>
+        <MainTitle>National Bank of Orkes</MainTitle>
+        <Box>
+          <SubText2 paragraph>
+            Enter a username to start a loan or see existing loans.
+          </SubText2>
+        </Box>
+        <TextField
+          label="Username"
+          onChange={(event) => setUserId(event.target.value)}
+          variant="filled"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          InputProps={{
+            disableUnderline: true,
+          }}
+          sx={{
+            "& .MuiInputBase-root": {
+              background: "#F1F6F7",
+              borderRadius: "11px 11px 11px 11px !important",
+              "& .MuiInputAdornment-root": {
+                paddingRight: "15px",
+                marginBottom: "10px",
+              },
+            },
+            "& .MuiFormLabel-root": {
+              fontSize: "12px",
+            }
+          }}
+        />
+        <Stack spacing={2} direction="row">
+          <SecondaryButton onClick={handleRequestForLoan} disabled={hasUserId}>
+            Start a New Loan
+          </SecondaryButton>
+          <PrimaryButton href={`/loan/user/${userId}`}>
+            Continue Existing Loan
+          </PrimaryButton>
+        </Stack>
+      </Stack>
+    </MainLayout>
   );
 }

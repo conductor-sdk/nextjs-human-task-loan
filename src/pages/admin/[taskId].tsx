@@ -101,28 +101,6 @@ export default function Test({
 
   const router = useRouter();
 
-  /* const handleSelectTask = async (selectedTask: HumanTaskEntry) => { */
-  /*   const { taskId, state } = selectedTask; */
-  /*   let task = selectedTask; */
-  /**/
-  /*   const client = await orkesConductorClient(conductor); */
-  /*   if (state === "ASSIGNED") { */
-  /*     try { */
-  /*       const humanExecutor = new HumanExecutor(client); */
-  /*       const claimedTask = await assignTaskAndClaim( */
-  /*         humanExecutor, */
-  /*         taskId!, */
-  /*         "admin" */
-  /*       ); */
-  /**/
-  /*       task = claimedTask; */
-  /*     } catch (error: any) { */
-  /*       console.log("error", error); */
-  /*     } */
-  /*   } */
-  /*   router.replace(`/admin/${task.taskId}`); */
-  /* }; */
-
   const handleDone = async () => {
     const humanExecutor = new HumanExecutor(
       await orkesConductorClient(conductor)

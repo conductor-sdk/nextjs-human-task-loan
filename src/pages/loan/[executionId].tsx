@@ -1,6 +1,5 @@
-import Head from "next/head";
 import { useState } from "react";
-import { Button, Stack, Typography, Box, Paper } from "@mui/material";
+import { Stack, Box } from "@mui/material";
 import { PrimaryButton } from "@/components/elements/buttons/Buttons";
 import {
   orkesConductorClient,
@@ -11,19 +10,11 @@ import {
 } from "@io-orkes/conductor-javascript";
 import { GetServerSidePropsContext } from "next";
 import getConfig from "next/config";
-import styles from "@/styles/Home.module.css";
 import { useRouter } from "next/navigation";
 import { findTaskAndClaim, findFirstTaskInProgress } from "../../utils/helpers";
 import { FormDisplay } from "@/components/FormDisplay";
-import { formatDate } from "@/utils/helpers";
 import MainLayout from "@/components/MainLayout";
-import {
-  MainTitle,
-  SubText1,
-  SubText2,
-} from "@/components/elements/texts/Typographys";
-import { ReactNode } from "react";
-import { OpenButton } from "@/components/elements/buttons/Buttons";
+import { MainTitle, SubText2 } from "@/components/elements/texts/Typographys";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { publicRuntimeConfig } = getConfig();

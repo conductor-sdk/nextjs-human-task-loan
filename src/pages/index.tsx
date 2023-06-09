@@ -1,20 +1,14 @@
-import Head from "next/head";
 import MainLayout from "@/components/MainLayout";
 import {
   MainTitle,
   SubText1,
   SubText2,
-  TitleInTitleBar,
 } from "@/components/elements/texts/Typographys";
 import {
   SecondaryButton,
   PrimaryButton,
 } from "@/components/elements/buttons/Buttons";
-import { Paper, Typography, Box, Stack, Button } from "@mui/material";
-import styles from "@/styles/Home.module.css";
-import CreditScoreIcon from "@mui/icons-material/CreditScore";
-import ApprovalIcon from "@mui/icons-material/Approval";
-import CloseIcon from "@mui/icons-material/Close";
+import { Box, Stack, } from "@mui/material";
 
 export default function Home() {
   return (
