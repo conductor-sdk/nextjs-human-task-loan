@@ -161,32 +161,3 @@ export default function Test({
     </MainLayout>
   )
 }
-// (
-//     <>
-//       <Head>
-//         <title>Loan Approval</title>
-//         <link rel="icon" href="/favicon.ico" />
-//       </Head>
-//
-//       <main className={styles.main}>
-//         <Paper sx={{ padding: 20 }}>
-//           <FormDisplay
-//             key={selectedTaskId}
-//             template={template!}
-//             formState={defaultValues}
-//             displayErrors={error}
-//             onFormChange={setFormState}
-//           />
-//           <Stack
-//             width={"100%"}
-//             direction={"row"}
-//             justifyContent={"space-between"}
-//             mt={2}
-//           >
-//             <Button onClick={handleDone}>Done</Button>
-//             <Button onClick={handleUpdate}>Update</Button>
-//           </Stack>
-//         </Paper>
-//       </main>
-//     </>
-//   )
