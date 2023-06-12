@@ -10,13 +10,13 @@ import { GetServerSidePropsContext } from "next";
 import {
   TaskTable,
   StatusRenderer,
+  ValueRenderers,
 } from "@/components/elements/table/Table";
 import { MainTitle } from "@/components/elements/texts/Typographys";
 import _path from "lodash/fp/path";
 import { formatDate } from "@/utils/helpers";
 import MainLayout from "@/components/MainLayout";
 
-import { ReactNode } from "react";
 import { OpenButton } from "@/components/elements/buttons/Buttons";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -56,19 +56,33 @@ type Props = {
   };
 };
 
-const columnRenderer: Record<string, (n: HumanTaskEntry) => ReactNode> = {
-  Id: (t: HumanTaskEntry) => t.workflowId!,
-  Date: (t: HumanTaskEntry) => formatDate(t.createdOn!),
-  "Task Name": (t: HumanTaskEntry) => t.taskName!,
-  Status: (t: HumanTaskEntry) => <StatusRenderer state={t.state!} />,
-  "": (t: HumanTaskEntry) => (
-    <OpenButton
-      href={`/loan/${t.workflowId!}`}
-      disabled={t.state !== "IN_PROGRESS"}
-    >
-      Open
-    </OpenButton>
-  ),
+const columnRenderer: ValueRenderers = {
+  Id: {
+    renderer: (t: HumanTaskEntry) => t.workflowId!,
+    sortId: "workflowId",
+  },
+  Date: {
+    renderer: (t: HumanTaskEntry) => formatDate(t.createdOn!),
+    sortId: "createdOn",
+  },
+  "Task Name": {
+    renderer: (t: HumanTaskEntry) => t.taskName!,
+    sortId: "taskName",
+  },
+  Status: {
+    renderer: (t: HumanTaskEntry) => <StatusRenderer state={t.state!} />,
+    sortId: "state",
+  },
+  "": {
+    renderer: (t: HumanTaskEntry) => (
+      <OpenButton
+        href={`/loan/${t.workflowId!}`}
+        disabled={t.state !== "IN_PROGRESS"}
+      >
+        Open
+      </OpenButton>
+    ),
+  },
 };
 
 export default function MyOrders({ tasks, completedTasks, userId }: Props) {
