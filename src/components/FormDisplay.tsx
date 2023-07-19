@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { HumanTaskTemplateEntry } from "@io-orkes/conductor-javascript";
+import { HumanTaskTemplateEntry } from "@io-orkes/conductor-javascript/browser";
 import { JsonForms } from "@jsonforms/react";
 import { ThemeProvider, createTheme } from "@mui/material";
 import {

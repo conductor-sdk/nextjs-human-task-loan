@@ -7,7 +7,7 @@ import {
   HumanTaskTemplateEntry,
   HumanTaskEntry,
   HumanExecutor,
-} from "@io-orkes/conductor-javascript";
+} from "@io-orkes/conductor-javascript/browser";
 import { GetServerSidePropsContext } from "next";
 import getConfig from "next/config";
 import { useRouter } from "next/navigation";

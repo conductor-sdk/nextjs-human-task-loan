@@ -1,9 +1,9 @@
-import { ReactNode, useMemo, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 import {
   orkesConductorClient,
   HumanTaskEntry,
   HumanExecutor,
-} from "@io-orkes/conductor-javascript";
+} from "@io-orkes/conductor-javascript/browser";
 
 import { MainTitle } from "@/components/elements/texts/Typographys";
 import MainLayout from "@/components/MainLayout";

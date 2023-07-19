@@ -3,7 +3,7 @@ import { Stack, Box, TextField } from "@mui/material";
 import {
   orkesConductorClient,
   WorkflowExecutor,
-} from "@io-orkes/conductor-javascript";
+} from "@io-orkes/conductor-javascript/browser";
 import MainLayout from "@/components/MainLayout";
 import {
   PrimaryButton,
