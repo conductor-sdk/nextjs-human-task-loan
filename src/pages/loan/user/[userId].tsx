@@ -5,7 +5,7 @@ import {
   HumanTaskEntry,
   ConductorClient,
   HumanExecutor,
-} from "@io-orkes/conductor-javascript";
+} from "@io-orkes/conductor-javascript/browser";
 import { GetServerSidePropsContext } from "next";
 import {
   TaskTable,
