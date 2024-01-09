@@ -1,7 +1,7 @@
 import {
   HumanTaskEntry,
   HumanExecutor,
-} from "@io-orkes/conductor-javascript";
+} from "@io-orkes/conductor-javascript/browser";
 import { format } from "date-fns";
 
 export const assignTaskAndClaim = async (
@@ -17,7 +17,10 @@ export const findTaskAndClaim = async (
   executor: HumanExecutor,
   assignee: string
 ): Promise<HumanTaskEntry | null> => {
-  const tasks = await executor.getTasksByFilter("ASSIGNED", assignee);
+  const tasks = await executor.search({
+    states: ["ASSIGNED"],
+    assignees: [{ userType: "EXTERNAL_USER", user: assignee }],
+  });
   if (tasks.length > 0) {
     const taskId = tasks[0]!.taskId;
     return await assignTaskAndClaim(executor, taskId!, assignee);
@@ -29,7 +32,10 @@ export const findFirstTaskInProgress = async (
   executor: HumanExecutor,
   assignee: string
 ): Promise<HumanTaskEntry | null> => {
-  const tasks = await executor.getTasksByFilter("IN_PROGRESS", assignee);
+  const tasks = await executor.search({
+    states: ["IN_PROGRESS"],
+    assignees: [{ userType: "EXTERNAL_USER", user: assignee }],
+  });
   if (tasks.length > 0) {
     const task = tasks[0];
     return task;
@@ -44,17 +50,16 @@ export const getClaimedAndUnClaimedTasksForAssignee = async (
   claimedTasks: HumanTaskEntry[];
   unClaimedTasks: HumanTaskEntry[];
 }> => {
-  const claimedTasks = await humanExecutor.getTasksByFilter(
-    "IN_PROGRESS",
-    assignee
-  );
-  const unClaimedTasks = await humanExecutor.getTasksByFilter(
-    "ASSIGNED",
-    assignee
-  );
+  const claimedTasks = await humanExecutor.search({
+    states: ["IN_PROGRESS"],
+    assignees: [{ userType: "EXTERNAL_USER", user: assignee }],
+  });
+  const unClaimedTasks = await humanExecutor.search({
+    states: ["ASSIGNED"],
+    assignees: [{ userType: "EXTERNAL_USER", user: assignee }],
+  });
   return { claimedTasks, unClaimedTasks };
 };
-
 
 export const formatDate = (timestamp?: number): string => {
   if (!timestamp) {
@@ -64,3 +69,11 @@ export const formatDate = (timestamp?: number): string => {
   const prettyDate = format(dateObject, "dd/MM/yyyy");
   return prettyDate;
 };
+
+export const omitStartsWithUnderscore = (obj: Record<string, unknown>) =>
+  Object.fromEntries(Object.entries(obj).filter(([k]) => !k.startsWith("_")));
+
+export const taskDefaultValues = (maybeTask?: HumanTaskEntry | null) => ({
+  ...omitStartsWithUnderscore(maybeTask?.input || {}),
+  ...(maybeTask?.output || {}),
+});

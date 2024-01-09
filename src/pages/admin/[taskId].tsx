@@ -1,10 +1,10 @@
 import { useState, useMemo } from "react";
-import { Stack, Button, } from "@mui/material";
+import { Stack } from "@mui/material";
 import {
   orkesConductorClient,
   HumanTaskEntry,
-  HumanTaskTemplateEntry,
   HumanExecutor,
+  HumanTaskTemplate
 } from "@io-orkes/conductor-javascript/browser";
 import getConfig from "next/config";
 import { useRouter } from "next/navigation";
@@ -13,6 +13,7 @@ import { GetServerSidePropsContext } from "next";
 import { PrimaryButton,SecondaryButton } from "@/components/elements/buttons/Buttons"; 
 import { MainTitle } from "@/components/elements/texts/Typographys";
 import MainLayout from "@/components/MainLayout";
+import { taskDefaultValues } from "@/utils/helpers";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { publicRuntimeConfig } = getConfig();
@@ -20,10 +21,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const client = await clientPromise;
   const selectedTaskId = context.params?.taskId as string;
   if (selectedTaskId) {
-    const selectedTask = await client.humanTask.getTask1(selectedTaskId);
+    const humanExecutor = new HumanExecutor(client);
+    const selectedTask = await humanExecutor.getTaskById(selectedTaskId);
 
-    const template = await client.humanTask.getTemplateById(
-      selectedTask!.templateId!
+    const template = await humanExecutor.getTemplateByNameVersion(
+      selectedTask!.humanTaskDef!.userFormTemplate!.name!,
+      selectedTask!.humanTaskDef!.userFormTemplate!.version!,
     );
 
     return {
@@ -66,7 +69,7 @@ type Props = {
   claimedTasks: HumanTaskEntry[];
   unClaimedTasks: HumanTaskEntry[];
   selectedTask: HumanTaskEntry | null;
-  template: HumanTaskTemplateEntry | null;
+  template: HumanTaskTemplate | null;
   selectedTaskId: string;
 };
 
@@ -78,9 +81,9 @@ export default function Test({
 }: Props) {
   const [formState, setFormState] = useState<
     Record<string, Record<string, any>>
-  >(selectedTask?.predefinedInput || {});
+  >(taskDefaultValues(selectedTask));
+
   const [error, setError] = useState<boolean>(false);
-  console.log("selectedTask", selectedTask);
 
   const router = useRouter();
 
@@ -114,8 +117,7 @@ export default function Test({
 
   const defaultValues = useMemo(() => {
     return {
-      ...(selectedTask?.predefinedInput || {}),
-      ...(selectedTask?.output || {}),
+      ...(taskDefaultValues(selectedTask) || {}),
     };
   }, [selectedTask]);
 

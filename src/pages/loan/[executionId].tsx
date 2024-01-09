@@ -4,14 +4,18 @@ import { PrimaryButton } from "@/components/elements/buttons/Buttons";
 import {
   orkesConductorClient,
   Workflow,
-  HumanTaskTemplateEntry,
   HumanTaskEntry,
   HumanExecutor,
+  HumanTaskTemplate,
 } from "@io-orkes/conductor-javascript/browser";
 import { GetServerSidePropsContext } from "next";
 import getConfig from "next/config";
 import { useRouter } from "next/navigation";
-import { findTaskAndClaim, findFirstTaskInProgress } from "../../utils/helpers";
+import {
+  findTaskAndClaim,
+  findFirstTaskInProgress,
+  taskDefaultValues,
+} from "../../utils/helpers";
 import { FormDisplay } from "@/components/FormDisplay";
 import MainLayout from "@/components/MainLayout";
 import { MainTitle, SubText2 } from "@/components/elements/texts/Typographys";
@@ -28,6 +32,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const taskInProgress = (workflowStatus.tasks || []).filter(
     ({ status, taskType }) => status === "IN_PROGRESS" && taskType === "HUMAN"
   );
+
   if (taskInProgress.length > 0) {
     // Assert Workflow is waiting on human task
     const userId = workflowStatus?.input?.userId as string;
@@ -41,11 +46,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const task =
       maybeClaimedTask || (await findFirstTaskInProgress(executor, userId));
 
-    if (task?.templateId != undefined) {
-      const template = await client.humanTask.getTemplateById(
-        task!.templateId!
+    if (
+      task?.humanTaskDef?.userFormTemplate?.name != undefined &&
+      task?.humanTaskDef?.userFormTemplate?.version != undefined
+    ) {
+      const template = await client.humanTask.getTemplateByNameAndVersion(
+        task?.humanTaskDef?.userFormTemplate?.name,
+        task?.humanTaskDef?.userFormTemplate?.version
       );
-
       return {
         props: {
           executionId,
@@ -60,6 +68,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       };
     }
   }
+
   return {
     props: {
       executionId,
@@ -78,7 +87,7 @@ type Props = {
   executionId: string;
   workflowStatus: Workflow;
   task: HumanTaskEntry | null;
-  template: HumanTaskTemplateEntry | null;
+  template: HumanTaskTemplate | null;
   conductor: {
     serverUrl: string;
     TOKEN: string;
@@ -86,7 +95,7 @@ type Props = {
 };
 
 export default function Loan(props: Props) {
-  const [formState, setFormState] = useState(props.task?.predefinedInput || {});
+  const [formState, setFormState] = useState(taskDefaultValues(props.task));
   const [showErrors, setShowErrors] = useState(false);
   const router = useRouter();
   const completeStep = async () => {

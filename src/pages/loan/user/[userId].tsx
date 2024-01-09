@@ -25,12 +25,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const client: ConductorClient = await clientPromise;
   const userId = context.params?.userId as string;
   const humanExecutor = new HumanExecutor(client);
-  const tasks = await humanExecutor.getTasksByFilter("IN_PROGRESS", userId);
-
-  const completedTasks = await humanExecutor.getTasksByFilter(
-    "COMPLETED",
-    userId
-  );
+  const tasks = await humanExecutor.search({
+    states: ["IN_PROGRESS"],
+    assignees: [{ userType: "EXTERNAL_USER", user: userId }],
+  });
+  const completedTasks = await humanExecutor.search({
+    states: ["COMPLETED"],
+    assignees: [{ userType: "EXTERNAL_USER", user: userId }],
+  });
 
   // Assert Workflow is waiting on human task
   return {
@@ -66,8 +68,8 @@ const columnRenderer: ValueRenderers = {
     sortId: "createdOn",
   },
   "Task Name": {
-    renderer: (t: HumanTaskEntry) => t.taskName!,
-    sortId: "taskName",
+    renderer: (t: HumanTaskEntry) => t.taskRefName!,
+    sortId: "taskRefName",
   },
   Status: {
     renderer: (t: HumanTaskEntry) => <StatusRenderer state={t.state!} />,

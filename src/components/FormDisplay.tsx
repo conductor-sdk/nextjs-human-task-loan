@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { HumanTaskTemplateEntry } from "@io-orkes/conductor-javascript/browser";
+import { HumanTaskTemplate } from "@io-orkes/conductor-javascript/browser";
 import { JsonForms } from "@jsonforms/react";
 import { ThemeProvider, createTheme } from "@mui/material";
 import {
@@ -108,8 +108,9 @@ const renderers = [
   ...materialRenderers,
   { tester: DescriptionTextTester, renderer: DescriptionTextControl },
 ];
+
 type Props = {
-  template: HumanTaskTemplateEntry;
+  template: HumanTaskTemplate;
   formState: Record<string, Record<string, any>>;
   onFormChange: (formChanges: Record<string, Record<string, any>>) => void;
   displayErrors: boolean;

@@ -69,8 +69,8 @@ const columnRenderer: ValueRenderers = {
     sortId: "createdOn",
   },
   "Task Name": {
-    renderer: (t: HumanTaskEntry) => t.taskName!,
-    sortId: "taskName",
+    renderer: (t: HumanTaskEntry) => t.taskRefName!,
+    sortId: "taskRefName",
   },
   Status: {
     renderer: (t: HumanTaskEntry) => <StatusRenderer state={t.state!} />,
