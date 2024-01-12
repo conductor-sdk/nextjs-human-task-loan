@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Stack, Box, TextField } from "@mui/material";
+import { Stack, Box, TextField, Select, MenuItem } from "@mui/material";
 import {
   orkesConductorClient,
   WorkflowExecutor,
@@ -9,6 +8,7 @@ import {
   PrimaryButton,
   SecondaryButton,
 } from "@/components/elements/buttons/Buttons";
+import { useState } from "react";
 import { MainTitle, SubText2 } from "@/components/elements/texts/Typographys";
 import getConfig from "next/config";
 import { useRouter } from "next/navigation";
@@ -38,9 +38,14 @@ type Props = {
   workflows: Record<string, string>;
   correlationId: string;
 };
+const LOAN_TYPES = ["student", "auto", "home"];
+type LoanType = "student" | "auto" | "home";
 
 export default function Loan({ conductor, workflows, correlationId }: Props) {
-  const [userId, setUserId] = useState<string>("");
+  const [amount, setAmount] = useState(0);
+  const [details, setDetails] = useState("");
+  const [loanType, setLoanType] = useState<LoanType>("student");
+
   const router = useRouter();
   const handleRequestForLoan = () => {
     const runWorkflow = async () => {
@@ -49,57 +54,51 @@ export default function Loan({ conductor, workflows, correlationId }: Props) {
         name: workflows.requestForLoan,
         version: 1,
         input: {
-          userId: userId,
+          loanType,
+          amount,
+          details,
         },
+        correlationId
       });
-      router.push(`/loan/${executionId}`);
+      console.log("correlationId", correlationId);
+      //router.push(`/loan/${executionId}`);
     };
     runWorkflow();
   };
-  const hasUserId = userId.trim().length == 0;
 
   return (
     <MainLayout title="Most Trusted">
       <Stack spacing={6} justifyContent={"center"} alignItems={"center"}>
         <MainTitle>National Bank of Orkes</MainTitle>
         <Box>
-          <SubText2 paragraph>
-            Enter a username to start a loan or see existing loans.
-          </SubText2>
+          <SubText2 paragraph>Pick a loan type</SubText2>
         </Box>
-        <TextField
-          label="Username"
-          onChange={(event) => setUserId(event.target.value)}
-          variant="filled"
-          InputLabelProps={{
-            shrink: true,
-            
-          }}
-          InputProps={{
-            disableUnderline: true,
-            autoComplete: "off",
-          }}
-          sx={{
-            "& .MuiInputBase-root": {
-              background: "#F1F6F7",
-              borderRadius: "11px 11px 11px 11px !important",
-              "& .MuiInputAdornment-root": {
-                paddingRight: "15px",
-                marginBottom: "10px",
-              },
-            },
-            "& .MuiFormLabel-root": {
-              fontSize: "12px",
-            }
-          }}
-        />
-        <Stack spacing={2} direction="row">
-          <SecondaryButton onClick={handleRequestForLoan} disabled={hasUserId}>
-            Start a New Loan
+        <Stack spacing={2} direction="column">
+          <Select>
+            {LOAN_TYPES.map((loanType) => (
+              <MenuItem
+                key={loanType}
+                value={loanType}
+                onChange={(ev: any) => setLoanType(ev.target.value as LoanType)}
+              >
+                {loanType}
+              </MenuItem>
+            ))}
+          </Select>
+          <TextField
+            label="Amount"
+            onChange={(ev) => setAmount(Number(ev.target.value))}
+            value={amount}
+          />
+          <TextField
+            onChange={(ev) => setDetails(ev.target.value)}
+            label="Details"
+            multiline
+            value={details}
+          />
+          <SecondaryButton onClick={handleRequestForLoan}>
+            Submit
           </SecondaryButton>
-          <PrimaryButton href={`/loan/user/${userId}`} disabled={hasUserId}>
-            Continue Existing Loan
-          </PrimaryButton>
         </Stack>
       </Stack>
     </MainLayout>

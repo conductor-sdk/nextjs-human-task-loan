@@ -11,7 +11,7 @@ import {
   TaskTable,
   StatusRenderer,
   ValueRenderers,
-} from "@/components/elements/table/Table";
+} from "@/components/elements/table/HumanTaskEntryTable";
 import { MainTitle } from "@/components/elements/texts/Typographys";
 import _path from "lodash/fp/path";
 import { formatDate } from "@/utils/helpers";

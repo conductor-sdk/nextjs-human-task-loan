@@ -19,7 +19,7 @@ import {
   TaskTable,
   StatusRenderer,
   ValueRenderers,
-} from "@/components/elements/table/Table";
+} from "@/components/elements/table/HumanTaskEntryTable";
 import { OpenButton } from "@/components/elements/buttons/Buttons";
 
 export async function getServerSideProps() {
