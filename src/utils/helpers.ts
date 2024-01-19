@@ -9,20 +9,35 @@ export const assignTaskAndClaim = async (
   taskId: string,
   assignee: string
 ): Promise<HumanTaskEntry> => {
-  await executor.claimTaskAsExternalUser(taskId!, assignee);
-  return await executor.getTaskById(taskId!);
+  return await executor.claimTaskAsExternalUser(taskId!, assignee);
+};
+
+export const findTasks = async (
+  executor: HumanExecutor,
+  assignee: string,
+  packet?: string
+): Promise<HumanTaskEntry[]> => {
+  const tasks = await executor.pollSearch({
+    states: ["ASSIGNED", "IN_PROGRESS"],
+    assignees: [{ userType: "EXTERNAL_USER", user: assignee }],
+    ...(packet != null ? { taskInputQuery: `packet = "${packet}"` } : {}),
+  });
+  return tasks;
 };
 
 export const findTaskAndClaim = async (
   executor: HumanExecutor,
-  assignee: string
+  assignee: string,
+  packet: string
 ): Promise<HumanTaskEntry | null> => {
-  const tasks = await executor.search({
-    states: ["ASSIGNED"],
-    assignees: [{ userType: "EXTERNAL_USER", user: assignee }],
-  });
+  const tasks = await findTasks(executor, assignee, packet);
   if (tasks.length > 0) {
-    const taskId = tasks[0]!.taskId;
+    const [firstTask] = tasks;
+    if (firstTask.state === "IN_PROGRESS") {
+      return executor.getTaskById(firstTask.taskId!);
+    }
+    const taskId = firstTask!.taskId;
+
     return await assignTaskAndClaim(executor, taskId!, assignee);
   }
   return null;
@@ -44,21 +59,13 @@ export const findFirstTaskInProgress = async (
 };
 
 export const getClaimedAndUnClaimedTasksForAssignee = async (
-  humanExecutor: HumanExecutor,
-  assignee: string
-): Promise<{
-  claimedTasks: HumanTaskEntry[];
-  unClaimedTasks: HumanTaskEntry[];
-}> => {
-  const claimedTasks = await humanExecutor.search({
-    states: ["IN_PROGRESS"],
-    assignees: [{ userType: "EXTERNAL_USER", user: assignee }],
+  humanExecutor: HumanExecutor
+): Promise<HumanTaskEntry[]> => {
+  const tasks = await humanExecutor.search({
+    states: ["IN_PROGRESS", "ASSIGNED"],
   });
-  const unClaimedTasks = await humanExecutor.search({
-    states: ["ASSIGNED"],
-    assignees: [{ userType: "EXTERNAL_USER", user: assignee }],
-  });
-  return { claimedTasks, unClaimedTasks };
+
+  return tasks;
 };
 
 export const formatDate = (timestamp?: number): string => {

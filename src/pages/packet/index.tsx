@@ -1,11 +1,10 @@
-import { Stack, Box, TextField, Select, MenuItem } from "@mui/material";
+import { Stack, Box, TextField, MenuItem } from "@mui/material";
 import {
   orkesConductorClient,
   WorkflowExecutor,
 } from "@io-orkes/conductor-javascript/browser";
 import MainLayout from "@/components/MainLayout";
 import {
-  PrimaryButton,
   SecondaryButton,
 } from "@/components/elements/buttons/Buttons";
 import { useState } from "react";
@@ -38,13 +37,9 @@ type Props = {
   workflows: Record<string, string>;
   correlationId: string;
 };
-const LOAN_TYPES = ["student", "auto", "home"];
-type LoanType = "student" | "auto" | "home";
 
 export default function Loan({ conductor, workflows, correlationId }: Props) {
-  const [amount, setAmount] = useState(0);
-  const [details, setDetails] = useState("");
-  const [loanType, setLoanType] = useState<LoanType>("student");
+  const [userId, setUserId] = useState("");
 
   const router = useRouter();
   const handleRequestForLoan = () => {
@@ -54,14 +49,11 @@ export default function Loan({ conductor, workflows, correlationId }: Props) {
         name: workflows.requestForLoan,
         version: 1,
         input: {
-          loanType,
-          amount,
-          details,
+          userId,
         },
         correlationId
       });
-      console.log("correlationId", correlationId);
-      //router.push(`/loan/${executionId}`);
+      router.push(`/packet/${executionId}`);
     };
     runWorkflow();
   };
@@ -69,32 +61,15 @@ export default function Loan({ conductor, workflows, correlationId }: Props) {
   return (
     <MainLayout title="Most Trusted">
       <Stack spacing={6} justifyContent={"center"} alignItems={"center"}>
-        <MainTitle>National Bank of Orkes</MainTitle>
+        <MainTitle>Fake login a user</MainTitle>
         <Box>
-          <SubText2 paragraph>Pick a loan type</SubText2>
+          <SubText2 paragraph>Enter a user name</SubText2>
         </Box>
         <Stack spacing={2} direction="column">
-          <Select>
-            {LOAN_TYPES.map((loanType) => (
-              <MenuItem
-                key={loanType}
-                value={loanType}
-                onChange={(ev: any) => setLoanType(ev.target.value as LoanType)}
-              >
-                {loanType}
-              </MenuItem>
-            ))}
-          </Select>
           <TextField
-            label="Amount"
-            onChange={(ev) => setAmount(Number(ev.target.value))}
-            value={amount}
-          />
-          <TextField
-            onChange={(ev) => setDetails(ev.target.value)}
-            label="Details"
-            multiline
-            value={details}
+            label="User"
+            onChange={(ev) => setUserId(ev.target.value)}
+            value={userId}
           />
           <SecondaryButton onClick={handleRequestForLoan}>
             Submit

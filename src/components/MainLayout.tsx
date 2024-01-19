@@ -36,7 +36,7 @@ const ClosableTitleBar = ({ title }: { title: string }) => {
                 color: "#000000",
               }}
             >
-              National Bank
+              Packet updates
             </Typography>
           </Stack>
         </Box>

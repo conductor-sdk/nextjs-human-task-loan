@@ -1,21 +1,21 @@
 import { useState } from "react";
 import { Stack, Box } from "@mui/material";
-import { PrimaryButton } from "@/components/elements/buttons/Buttons";
+import {
+  PrimaryButton,
+  SecondaryButton,
+} from "@/components/elements/buttons/Buttons";
 import {
   orkesConductorClient,
   Workflow,
   HumanTaskEntry,
   HumanExecutor,
   HumanTaskTemplate,
+  WorkflowExecutor,
 } from "@io-orkes/conductor-javascript/browser";
 import { GetServerSidePropsContext } from "next";
 import getConfig from "next/config";
 import { useRouter } from "next/navigation";
-import {
-  findTaskAndClaim,
-  findFirstTaskInProgress,
-  taskDefaultValues,
-} from "../../utils/helpers";
+import { findTaskAndClaim, taskDefaultValues } from "../../utils/helpers";
 import { FormDisplay } from "@/components/FormDisplay";
 import MainLayout from "@/components/MainLayout";
 import { MainTitle, SubText2 } from "@/components/elements/texts/Typographys";
@@ -28,45 +28,29 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const workflowStatus = await client.workflowResource.getExecutionStatus(
     executionId
   );
-
-  const taskInProgress = (workflowStatus.tasks || []).filter(
-    ({ status, taskType }) => status === "IN_PROGRESS" && taskType === "HUMAN"
+  const humanExecutor = new HumanExecutor(client);
+  const task = await findTaskAndClaim(
+    humanExecutor,
+    workflowStatus?.input?.userId,
+    executionId
   );
-
-  if (taskInProgress.length > 0) {
-    // Assert Workflow is waiting on human task
-    const userId = workflowStatus?.input?.userId as string;
-    let maybeClaimedTask: HumanTaskEntry | null = null;
-    const executor = new HumanExecutor(client);
-    try {
-      maybeClaimedTask = await findTaskAndClaim(executor, userId);
-    } catch (e) {
-      console.log(e);
-    }
-    const task =
-      maybeClaimedTask || (await findFirstTaskInProgress(executor, userId));
-
-    if (
-      task?.humanTaskDef?.userFormTemplate?.name != undefined &&
-      task?.humanTaskDef?.userFormTemplate?.version != undefined
-    ) {
-      const template = await client.humanTask.getTemplateByNameAndVersion(
-        task?.humanTaskDef?.userFormTemplate?.name,
-        task?.humanTaskDef?.userFormTemplate?.version
-      );
-      return {
-        props: {
-          executionId,
-          workflowStatus,
-          task,
-          template,
-          conductor: {
-            serverUrl: publicRuntimeConfig.conductor.serverUrl,
-            TOKEN: client.token,
-          },
+  if (task != null) {
+    const template = await client.humanTask.getTemplateByNameAndVersion(
+      task?.humanTaskDef?.userFormTemplate?.name!,
+      task?.humanTaskDef?.userFormTemplate?.version!
+    );
+    return {
+      props: {
+        executionId,
+        workflowStatus,
+        task,
+        template,
+        conductor: {
+          serverUrl: publicRuntimeConfig.conductor.serverUrl,
+          TOKEN: client.token,
         },
-      };
-    }
+      },
+    };
   }
 
   return {
@@ -109,7 +93,22 @@ export default function Loan(props: Props) {
         setShowErrors(true);
       }
 
-      router.push(`/loan/${props.executionId}`);
+      router.push(`/packet/${props.executionId}`);
+    }
+  };
+  const goBack = async () => {
+    if (props?.task?.workflowId != undefined) {
+      const { workflowId } = props.task;
+      const client = await orkesConductorClient(props.conductor);
+      try {
+        const wfExecutor = new WorkflowExecutor(client);
+        await wfExecutor.goBackToFirstTaskMatchingType(workflowId, "HUMAN");
+      } catch (e) {
+        console.log(e);
+        setShowErrors(true);
+      }
+
+      router.push(`/packet/${props.executionId}`);
     }
   };
 
@@ -119,33 +118,28 @@ export default function Loan(props: Props) {
     props.template != null;
 
   return (
-    <MainLayout title="Most Trusted">
+    <MainLayout title="Document">
       <Stack spacing={6} justifyContent={"center"} alignItems={"center"}>
         {taskIsDooable ? (
           <>
-            <MainTitle>Most Trusted</MainTitle>
+            <MainTitle>Document</MainTitle>
             <FormDisplay
               template={props.template!}
               formState={formState}
               onFormChange={setFormState}
               displayErrors={showErrors}
             />
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-              width="100%"
-            >
+            <Stack direction={"row"} spacing={1}>
+              <SecondaryButton onClick={goBack}>Back</SecondaryButton>
               <PrimaryButton onClick={completeStep}>Next</PrimaryButton>
-            </Box>
+            </Stack>
           </>
         ) : (
           <>
-            <MainTitle>Student Loan Application</MainTitle>
+            <MainTitle>Document finished</MainTitle>
             <Box>
               <SubText2 paragraph>
-                Thank you for filling our application!
+                Thank you for submitting the document
               </SubText2>
               <SubText2>You will be notified of any status change.</SubText2>
             </Box>

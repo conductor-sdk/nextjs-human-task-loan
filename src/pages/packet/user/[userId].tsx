@@ -14,7 +14,7 @@ import {
 } from "@/components/elements/table/HumanTaskEntryTable";
 import { MainTitle } from "@/components/elements/texts/Typographys";
 import _path from "lodash/fp/path";
-import { formatDate } from "@/utils/helpers";
+import { formatDate, findTasks } from "@/utils/helpers";
 import MainLayout from "@/components/MainLayout";
 
 import { OpenButton } from "@/components/elements/buttons/Buttons";
@@ -25,21 +25,23 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const client: ConductorClient = await clientPromise;
   const userId = context.params?.userId as string;
   const humanExecutor = new HumanExecutor(client);
-  const tasks = await humanExecutor.search({
-    states: ["IN_PROGRESS"],
-    assignees: [{ userType: "EXTERNAL_USER", user: userId }],
-  });
-  const completedTasks = await humanExecutor.search({
-    states: ["COMPLETED"],
-    assignees: [{ userType: "EXTERNAL_USER", user: userId }],
-  });
+  const tasks = await findTasks(humanExecutor, userId);
+
+  // await humanExecutor.search({
+  //   states: ["IN_PROGRESS"],
+  //   assignees: [{ userType: "EXTERNAL_USER", user: userId }],
+  //
+  // });
+  // const completedTasks = await humanExecutor.search({
+  //   states: ["COMPLETED"],
+  //   assignees: [{ userType: "EXTERNAL_USER", user: userId }],
+  // });
 
   // Assert Workflow is waiting on human task
   return {
     props: {
       userId,
       tasks,
-      completedTasks,
       conductor: {
         serverUrl: publicRuntimeConfig.conductor.serverUrl,
         TOKEN: client.token,
@@ -51,7 +53,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 type Props = {
   userId: string;
   tasks: HumanTaskEntry[];
-  completedTasks: HumanTaskEntry[];
+  // completedTasks: HumanTaskEntry[];
   conductor: {
     serverUrl: string;
     TOKEN: string;
@@ -87,15 +89,12 @@ const columnRenderer: ValueRenderers = {
   },
 };
 
-export default function MyOrders({ tasks, completedTasks, userId }: Props) {
+export default function MyOrders({ tasks, userId }: Props) {
   return (
-    <MainLayout title="Loan Inbox">
+    <MainLayout title="User Packets">
       <Stack spacing={6} justifyContent={"center"} alignItems={"center"}>
-        <MainTitle>Loan Inbox</MainTitle>
-        <TaskTable
-          tasks={tasks.concat(completedTasks)}
-          columns={columnRenderer}
-        />
+        <MainTitle>User Packets</MainTitle>
+        <TaskTable tasks={tasks} columns={columnRenderer} />
       </Stack>
     </MainLayout>
   );

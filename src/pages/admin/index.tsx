@@ -12,7 +12,6 @@ import getConfig from "next/config";
 import { useRouter } from "next/navigation";
 import {
   formatDate,
-  assignTaskAndClaim,
   getClaimedAndUnClaimedTasksForAssignee,
 } from "../../utils/helpers";
 import {
@@ -28,35 +27,31 @@ export async function getServerSideProps() {
   const client = await clientPromise;
   const humanExecutor = new HumanExecutor(client);
 
-  const { claimedTasks, unClaimedTasks } =
-    await getClaimedAndUnClaimedTasksForAssignee(
-      humanExecutor,
-      "approval-interim-group"
-    );
+  const tasks = await getClaimedAndUnClaimedTasksForAssignee(
+    humanExecutor,
+  );
   // With the client pull the workflow with correlationId (correlation id is not really needed it just helps to group orders together)
   return {
     props: {
-      conductor: {
-        serverUrl: publicRuntimeConfig.conductor.serverUrl,
-        TOKEN: client.token,
-      },
+      // conductor: {
+      //   serverUrl: publicRuntimeConfig.conductor.serverUrl,
+      //   TOKEN: client.token,
+      // },
       workflows: publicRuntimeConfig.workflows,
       correlationId: publicRuntimeConfig.workflows.correlationId,
-      unClaimedTasks,
-      claimedTasks,
+      tasks,
     },
   };
 }
 
 type Props = {
-  conductor: {
-    serverUrl: string;
-    TOKEN: string;
-  };
+  // conductor: {
+  //   serverUrl: string;
+  //   TOKEN: string;
+  // };
   workflows: Record<string, string>;
   correlationId: string;
-  unClaimedTasks: HumanTaskEntry[];
-  claimedTasks: HumanTaskEntry[];
+  tasks: HumanTaskEntry[];
 };
 
 const columnRenderer: ValueRenderers = {
@@ -72,6 +67,10 @@ const columnRenderer: ValueRenderers = {
     renderer: (t: HumanTaskEntry) => t.taskRefName!,
     sortId: "taskRefName",
   },
+  "Assignee":{
+    renderer: (t: HumanTaskEntry) => t.assignee!.user!,
+    sortId: "assignee",
+  },
   Status: {
     renderer: (t: HumanTaskEntry) => <StatusRenderer state={t.state!} />,
     sortId: "state",
@@ -79,37 +78,17 @@ const columnRenderer: ValueRenderers = {
 };
 
 export default function Admin({
-  conductor,
-  unClaimedTasks,
-  claimedTasks,
+  tasks
 }: Props) {
   const router = useRouter();
   const handleSelectTask = useCallback(
     async (selectedTask: HumanTaskEntry) => {
-      const { taskId, state } = selectedTask;
-      let task = selectedTask;
+      console.log(selectedTask);
 
-      const humanExecutor = new HumanExecutor(
-        await orkesConductorClient(conductor)
-      );
-      if (state === "ASSIGNED") {
-        try {
-          const claimedTask = await assignTaskAndClaim(
-            humanExecutor,
-            taskId!,
-            "admin"
-          );
-
-          task = claimedTask;
-        } catch (error: any) {
-          console.log("error", error);
-        }
-      }
-      router.push(`/admin/${task.taskId}`);
+      router.push(`/packet/${selectedTask?.input?.packet}`);
     },
-    [router, conductor]
+    [router]
   );
-  const tasks = unClaimedTasks.concat(claimedTasks);
   const columnsWithContext = useMemo(() => {
     return {
       ...columnRenderer,
@@ -118,13 +97,18 @@ export default function Admin({
           <OpenButton onClick={() => handleSelectTask(t)}>Open</OpenButton>
         ),
       },
+      Kill: {
+        renderer: (t: HumanTaskEntry) => (
+          <OpenButton onClick={() => handleSelectTask(t)}>Kill</OpenButton>
+        ),
+      },
     };
   }, [handleSelectTask]);
 
   return (
-    <MainLayout title="Loan Inbox">
+    <MainLayout title="Open packets">
       <Stack spacing={6} justifyContent={"center"} alignItems={"center"}>
-        <MainTitle>Loan Inbox</MainTitle>
+        <MainTitle>Open Packets</MainTitle>
         <TaskTable tasks={tasks} columns={columnsWithContext} />
       </Stack>
     </MainLayout>
