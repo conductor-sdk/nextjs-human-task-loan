@@ -259,10 +259,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@io-orkes/conductor-javascript@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@io-orkes/conductor-javascript/-/conductor-javascript-1.2.2.tgz#b285cfe0732a901623b6bf3a9f2d4ff02b2b81f8"
-  integrity sha512-o5dm6FZ/rHjtl7bNvadd1x2TvoZ/Z7urL2wZzsjvwc7DSgw1YPvksSKJR+m3zaFigYAh+5MEXl/AxpHA9LKTBA==
+"@io-orkes/conductor-javascript@^2.0.0-rc1":
+  version "2.0.0-rc1"
+  resolved "https://registry.yarnpkg.com/@io-orkes/conductor-javascript/-/conductor-javascript-2.0.0-rc1.tgz#47189d33e79a45e9121b6f6c2998ae6f63bbfe80"
+  integrity sha512-B2+hJUsRgGiSPBVhpY05kC7gGZoSlKJb4GJUvYSQBQw+y+CGaoGEJLVUlypqH5SdXBHuSnmWWw4Ac61ufmuqJQ==
   dependencies:
     node-fetch "^2.6.12"
 
