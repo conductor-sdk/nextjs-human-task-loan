@@ -2,7 +2,7 @@ import { Stack, Box, TextField, MenuItem } from "@mui/material";
 import {
   orkesConductorClient,
   WorkflowExecutor,
-} from "@io-orkes/conductor-javascript/browser";
+} from "@io-orkes/conductor-javascript";
 import MainLayout from "@/components/MainLayout";
 import {
   SecondaryButton,

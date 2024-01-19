@@ -3,7 +3,7 @@ import {
   orkesConductorClient,
   HumanTaskEntry,
   HumanExecutor,
-} from "@io-orkes/conductor-javascript/browser";
+} from "@io-orkes/conductor-javascript";
 
 import { MainTitle } from "@/components/elements/texts/Typographys";
 import MainLayout from "@/components/MainLayout";

@@ -1,7 +1,7 @@
 import {
   HumanTaskEntry,
   HumanExecutor,
-} from "@io-orkes/conductor-javascript/browser";
+} from "@io-orkes/conductor-javascript";
 import { format } from "date-fns";
 
 export const assignTaskAndClaim = async (

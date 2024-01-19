@@ -5,7 +5,7 @@ import {
   HumanTaskEntry,
   HumanExecutor,
   HumanTaskTemplate
-} from "@io-orkes/conductor-javascript/browser";
+} from "@io-orkes/conductor-javascript";
 import getConfig from "next/config";
 import { useRouter } from "next/navigation";
 import { FormDisplay } from "@/components/FormDisplay";

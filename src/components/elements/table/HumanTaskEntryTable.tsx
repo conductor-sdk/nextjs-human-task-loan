@@ -6,7 +6,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { Paper, Typography, Box } from "@mui/material";
-import { HumanTaskEntry } from "@io-orkes/conductor-javascript/browser";
+import { HumanTaskEntry } from "@io-orkes/conductor-javascript";
 import { styled } from "@mui/material/styles";
 import { ReactNode, useState, useMemo } from "react";
 import { visuallyHidden } from "@mui/utils";
